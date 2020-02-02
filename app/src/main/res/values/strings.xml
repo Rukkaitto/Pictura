@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Pictura</string>
+
+    <!-- Filter names-->
+    <string name="toGray">Noir &amp; Blanc</string>
+    <string name="brightness">Luminosité</string>
+    <string name="contrast">Contraste</string>
+    <string name="improve">Amélioration</string>
+    <string name="tint">Teinte</string>
+    <string name="blur">Flou</string>
+
+    <!-- Button icons descriptions-->
+    <string name="save">Sauvegarder</string>
+    <string name="load">Charger une image</string>
+    <string name="camera">Prendre une photo</string>
+    <string name="reset">Réinitialiser</string>
+
+
 </resources>
