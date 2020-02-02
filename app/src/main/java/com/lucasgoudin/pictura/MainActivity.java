@@ -6,16 +6,9 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
 
@@ -27,12 +20,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Buttons
-        TextView toGrayBtn =  findViewById(R.id.toGrayBtn);
-        TextView brightnessBtn =  findViewById(R.id.brightnessBtn);
-        TextView contrastBtn =  findViewById(R.id.contrastBtn);
-        TextView improveBtn =  findViewById(R.id.improveBtn);
-        TextView tintBtn =  findViewById(R.id.tintBtn);
-        TextView blurBtn =  findViewById(R.id.blurBtn);
+        TextView toGrayBtn = findViewById(R.id.toGrayBtn);
+        TextView brightnessBtn = findViewById(R.id.brightnessBtn);
+        TextView contrastBtn = findViewById(R.id.contrastBtn);
+        TextView improveBtn = findViewById(R.id.improveBtn);
+        TextView tintBtn = findViewById(R.id.tintBtn);
+        TextView blurBtn = findViewById(R.id.blurBtn);
 
         ArrayList<TextView> buttons = new ArrayList<TextView>();
         buttons.add(toGrayBtn);
@@ -49,15 +42,13 @@ public class MainActivity extends AppCompatActivity {
         Bitmap preview = makePreview(image);
 
         RoundedBitmapDrawable image_d = RoundedBitmapDrawableFactory.create(this.getResources(), preview);
-        image_d.setCornerRadius(360);
+        image_d.setCornerRadius(45);
 
 
         for(TextView tv : buttons) {
             tv.setCompoundDrawablesRelativeWithIntrinsicBounds(null, image_d, null, null);
         }
-
-
-
+        
     }
 
 
@@ -78,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             result = Bitmap.createBitmap(image, 0, offset, dimension, dimension);
         }
 
-        return Bitmap.createScaledBitmap(image, 150, 150, true);
+        return Bitmap.createScaledBitmap(result, 150, 150, true);
     }
 
 
