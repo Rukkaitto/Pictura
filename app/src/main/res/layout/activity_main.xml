@@ -47,6 +47,8 @@
             android:layout_weight="1"
             android:background="@color/colorPrimary"
             android:contentDescription="@string/save"
+            android:fadingEdge="horizontal|vertical"
+            android:fadingEdgeLength="10pt"
             app:srcCompat="@android:drawable/ic_menu_save" />
 
         <ImageButton
@@ -72,7 +74,7 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight=".75" />
 
         <ImageButton
             android:id="@+id/resetBtn"
@@ -91,8 +93,6 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="#52000000"
-        android:fadingEdge="none"
-        android:fadingEdgeLength="10dp"
         android:scrollbarAlwaysDrawHorizontalTrack="false"
         android:scrollbarAlwaysDrawVerticalTrack="false"
         android:scrollbars="none"
