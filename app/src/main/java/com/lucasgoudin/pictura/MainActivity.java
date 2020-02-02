@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         for(TextView tv : buttons) {
             tv.setCompoundDrawablesRelativeWithIntrinsicBounds(null, image_d, null, null);
         }
-        
+
     }
 
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3C3C3C"
+    android:background="@color/colorPrimaryDark"
     tools:context=".MainActivity">
 
     <!--<ImageView
@@ -28,24 +28,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/image" />
 
-    <ImageButton
-        android:id="@+id/resetBtn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="5pt"
-        android:layout_weight="1"
-        android:contentDescription="@string/reset"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_revert" />
-
     <LinearLayout
         android:id="@+id/buttons"
-        android:layout_width="180dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_margin="5pt"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -53,7 +43,9 @@
             android:id="@+id/saveBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="@dimen/buttons_margins"
             android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:contentDescription="@string/save"
             app:srcCompat="@android:drawable/ic_menu_save" />
 
@@ -61,7 +53,9 @@
             android:id="@+id/loadBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="@dimen/buttons_margins"
             android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:contentDescription="@string/load"
             app:srcCompat="@android:drawable/ic_menu_gallery" />
 
@@ -69,9 +63,26 @@
             android:id="@+id/cameraBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="@dimen/buttons_margins"
             android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:contentDescription="@string/camera"
             app:srcCompat="@android:drawable/ic_menu_camera" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/resetBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/buttons_margins"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/reset"
+            app:srcCompat="@android:drawable/ic_menu_revert" />
 
     </LinearLayout>
 
@@ -80,6 +91,8 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="#52000000"
+        android:fadingEdge="none"
+        android:fadingEdgeLength="10dp"
         android:scrollbarAlwaysDrawHorizontalTrack="false"
         android:scrollbarAlwaysDrawVerticalTrack="false"
         android:scrollbars="none"
@@ -113,7 +126,7 @@
                 android:paddingRight="@dimen/icons_padding"
                 android:text="@string/toGray"
                 android:textAlignment="center"
-                android:textColor="@color/textColor"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size" />
 
             <TextView
@@ -130,7 +143,7 @@
                 android:paddingRight="@dimen/icons_padding"
                 android:text="@string/brightness"
                 android:textAlignment="center"
-                android:textColor="@color/textColor"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size" />
 
             <TextView
@@ -147,7 +160,7 @@
                 android:paddingRight="@dimen/icons_padding"
                 android:text="@string/contrast"
                 android:textAlignment="center"
-                android:textColor="@color/textColor"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size" />
 
             <TextView
@@ -164,7 +177,7 @@
                 android:paddingRight="@dimen/icons_padding"
                 android:text="@string/improve"
                 android:textAlignment="center"
-                android:textColor="@color/textColor"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size" />
 
             <TextView
@@ -181,7 +194,7 @@
                 android:paddingRight="@dimen/icons_padding"
                 android:text="@string/tint"
                 android:textAlignment="center"
-                android:textColor="@color/textColor"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size" />
 
             <TextView
@@ -198,7 +211,7 @@
                 android:paddingRight="@dimen/icons_padding"
                 android:text="@string/blur"
                 android:textAlignment="center"
-                android:textColor="@color/textColor"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size" />
 
 
