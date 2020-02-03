@@ -14,14 +14,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5bcd5290-d8a7-4ba2-a4b4-62eb48f98f9c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/Settings.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,7 +34,7 @@
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_2_API_28" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="b289375396c6" />
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
@@ -42,52 +44,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
           <provider selected="true" editor-type-id="android-designer2" />
           <provider editor-type-id="text-editor">
-            <state relative-caret-position="-3720">
+            <state relative-caret-position="120">
               <caret line="6" column="47" selection-start-line="6" selection-start-column="47" selection-end-line="6" selection-end-column="47" />
-              <folding>
-                <element signature="e#1892#1916#0" expanded="true" />
-                <element signature="e#2294#2308#0" expanded="true" />
-                <element signature="e#2315#2339#0" expanded="true" />
-                <element signature="e#2605#2619#0" expanded="true" />
-                <element signature="e#2743#2767#0" expanded="true" />
-                <element signature="e#2921#2937#0" expanded="true" />
-                <element signature="e#3325#3349#0" expanded="true" />
-                <element signature="e#3480#3495#0" expanded="true" />
-                <element signature="e#4374#4395#0" expanded="true" />
-                <element signature="e#4514#4536#0" expanded="true" />
-                <element signature="e#4574#4596#0" expanded="true" />
-                <element signature="e#4626#4642#0" expanded="true" />
-                <element signature="e#4776#4794#0" expanded="true" />
-                <element signature="e#5155#5176#0" expanded="true" />
-                <element signature="e#5295#5317#0" expanded="true" />
-                <element signature="e#5355#5377#0" expanded="true" />
-                <element signature="e#5407#5427#0" expanded="true" />
-                <element signature="e#5561#5579#0" expanded="true" />
-                <element signature="e#5938#5959#0" expanded="true" />
-                <element signature="e#6078#6100#0" expanded="true" />
-                <element signature="e#6138#6160#0" expanded="true" />
-                <element signature="e#6190#6208#0" expanded="true" />
-                <element signature="e#6342#6360#0" expanded="true" />
-                <element signature="e#6718#6739#0" expanded="true" />
-                <element signature="e#6858#6880#0" expanded="true" />
-                <element signature="e#6918#6940#0" expanded="true" />
-                <element signature="e#6970#6987#0" expanded="true" />
-                <element signature="e#7121#7139#0" expanded="true" />
-                <element signature="e#7494#7515#0" expanded="true" />
-                <element signature="e#7634#7656#0" expanded="true" />
-                <element signature="e#7694#7716#0" expanded="true" />
-                <element signature="e#7746#7760#0" expanded="true" />
-                <element signature="e#7894#7912#0" expanded="true" />
-                <element signature="e#8267#8288#0" expanded="true" />
-                <element signature="e#8407#8429#0" expanded="true" />
-                <element signature="e#8467#8489#0" expanded="true" />
-                <element signature="e#8519#8533#0" expanded="true" />
-                <element signature="e#8667#8685#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -106,9 +68,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="160">
               <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-              <folding>
-                <element signature="e#101#106#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -122,15 +81,25 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="50" selection-start-line="50" selection-end-line="50" />
+            <state relative-caret-position="435">
+              <caret line="60" column="36" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="36" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1173#1183#0" expanded="true" />
+                <element signature="e#1767#1971#0" expanded="true" />
+                <element signature="e#1970#1971#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/Settings.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="80">
+              <caret line="4" column="47" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -147,7 +116,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="397">
+            <state relative-caret-position="400">
               <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
             </state>
           </provider>
@@ -173,8 +142,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="layoutResourceFile" />
-        <option value="Class" />
         <option value="valueResourceFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -193,10 +162,11 @@
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/Settings.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/MainActivity.java" />
       </list>
     </option>
   </component>
@@ -211,6 +181,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -221,26 +192,18 @@
             <path>
               <item name="Pictura" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+            </path>
+            <path>
+              <item name="Pictura" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="pictura" type="cbb59c9e:AndroidPsiDirectoryNode" />
             </path>
             <path>
               <item name="Pictura" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="res" type="d4f16f75:AndroidResFolderNode" />
-              <item name="drawable" type="ddeffd01:AndroidResFolderTypeNode" />
-            </path>
-            <path>
-              <item name="Pictura" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
-              <item name="mipmap" type="ddeffd01:AndroidResFolderTypeNode" />
-            </path>
-            <path>
-              <item name="Pictura" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
-              <item name="mipmap" type="ddeffd01:AndroidResFolderTypeNode" />
-              <item name="ic_launcher" type="c431d0b8:AndroidResGroupNode" />
             </path>
             <path>
               <item name="Pictura" type="1abcf292:AndroidViewProjectNode" />
@@ -258,7 +221,6 @@
       </pane>
       <pane id="ProjectPane" />
       <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -410,7 +372,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.17593583" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.17593583" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Build Variants" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
@@ -419,15 +381,15 @@
       <window_info id="Capture Tool" order="7" />
       <window_info id="Favorites" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Run" order="0" sideWeight="0.49946523" weight="0.32893288" />
-      <window_info anchor="bottom" id="Logcat" order="1" sideWeight="0.49946523" visible="true" weight="0.420242" />
+      <window_info anchor="bottom" id="Logcat" order="1" sideWeight="0.49893048" weight="0.4201313" />
       <window_info anchor="bottom" id="TODO" order="2" />
       <window_info anchor="bottom" id="Android Profiler" order="3" />
       <window_info anchor="bottom" id="Debug" order="4" />
       <window_info anchor="bottom" id="Terminal" order="5" />
-      <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5005348" side_tool="true" visible="true" weight="0.420242" />
+      <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.5005348" side_tool="true" visible="true" weight="0.19361936" />
       <window_info anchor="bottom" id="Flutter Performance" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Build" order="9" weight="0.19361936" />
+      <window_info anchor="bottom" id="Build" order="9" sideWeight="0.49946523" visible="true" weight="0.19361936" />
       <window_info anchor="bottom" id="Find" order="10" weight="0.32893288" />
       <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" order="1" />
@@ -445,30 +407,10 @@
     <entry file="file://$PROJECT_DIR$/demo/build.gradle" />
     <entry file="file://$PROJECT_DIR$/library/build.gradle" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/MyImageView.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="4" column="43" selection-start-line="4" selection-start-column="43" selection-end-line="4" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-          <folding>
-            <element signature="e#101#106#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="397">
-          <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
+        <state relative-caret-position="100">
+          <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
         </state>
       </provider>
     </entry>
@@ -479,14 +421,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/MainActivity.java">
+    <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="50" selection-start-line="50" selection-end-line="50" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1173#1183#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="400">
+          <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="4" column="43" selection-start-line="4" selection-start-column="43" selection-end-line="4" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/Settings.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="4" column="47" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -497,57 +459,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
       <provider selected="true" editor-type-id="android-designer2" />
       <provider editor-type-id="text-editor">
-        <state relative-caret-position="-3720">
+        <state relative-caret-position="120">
           <caret line="6" column="47" selection-start-line="6" selection-start-column="47" selection-end-line="6" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/lucasgoudin/pictura/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="60" column="36" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="36" />
           <folding>
-            <element signature="e#1892#1916#0" expanded="true" />
-            <element signature="e#2294#2308#0" expanded="true" />
-            <element signature="e#2315#2339#0" expanded="true" />
-            <element signature="e#2605#2619#0" expanded="true" />
-            <element signature="e#2743#2767#0" expanded="true" />
-            <element signature="e#2921#2937#0" expanded="true" />
-            <element signature="e#3325#3349#0" expanded="true" />
-            <element signature="e#3480#3495#0" expanded="true" />
-            <element signature="e#4374#4395#0" expanded="true" />
-            <element signature="e#4514#4536#0" expanded="true" />
-            <element signature="e#4574#4596#0" expanded="true" />
-            <element signature="e#4626#4642#0" expanded="true" />
-            <element signature="e#4776#4794#0" expanded="true" />
-            <element signature="e#5155#5176#0" expanded="true" />
-            <element signature="e#5295#5317#0" expanded="true" />
-            <element signature="e#5355#5377#0" expanded="true" />
-            <element signature="e#5407#5427#0" expanded="true" />
-            <element signature="e#5561#5579#0" expanded="true" />
-            <element signature="e#5938#5959#0" expanded="true" />
-            <element signature="e#6078#6100#0" expanded="true" />
-            <element signature="e#6138#6160#0" expanded="true" />
-            <element signature="e#6190#6208#0" expanded="true" />
-            <element signature="e#6342#6360#0" expanded="true" />
-            <element signature="e#6718#6739#0" expanded="true" />
-            <element signature="e#6858#6880#0" expanded="true" />
-            <element signature="e#6918#6940#0" expanded="true" />
-            <element signature="e#6970#6987#0" expanded="true" />
-            <element signature="e#7121#7139#0" expanded="true" />
-            <element signature="e#7494#7515#0" expanded="true" />
-            <element signature="e#7634#7656#0" expanded="true" />
-            <element signature="e#7694#7716#0" expanded="true" />
-            <element signature="e#7746#7760#0" expanded="true" />
-            <element signature="e#7894#7912#0" expanded="true" />
-            <element signature="e#8267#8288#0" expanded="true" />
-            <element signature="e#8407#8429#0" expanded="true" />
-            <element signature="e#8467#8489#0" expanded="true" />
-            <element signature="e#8519#8533#0" expanded="true" />
-            <element signature="e#8667#8685#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1767#1971#0" expanded="true" />
+            <element signature="e#1970#1971#0" expanded="true" />
           </folding>
         </state>
       </provider>

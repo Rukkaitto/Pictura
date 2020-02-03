@@ -28,6 +28,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/image" />
 
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/filters"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
         android:id="@+id/buttons"
         android:layout_width="0dp"
@@ -121,6 +133,7 @@
                 android:drawableTop="@mipmap/ic_launcher"
                 android:drawablePadding="@dimen/text_padding"
                 android:focusable="true"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:paddingLeft="@dimen/icons_padding"
                 android:paddingRight="@dimen/icons_padding"

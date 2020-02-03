@@ -6,7 +6,10 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         TextView tintBtn = findViewById(R.id.tintBtn);
         TextView blurBtn = findViewById(R.id.blurBtn);
 
-        ArrayList<TextView> buttons = new ArrayList<TextView>();
+        final ArrayList<TextView> buttons = new ArrayList<TextView>();
         buttons.add(toGrayBtn);
         buttons.add(brightnessBtn);
         buttons.add(contrastBtn);
@@ -35,18 +38,30 @@ public class MainActivity extends AppCompatActivity {
         buttons.add(tintBtn);
         buttons.add(blurBtn);
 
-
+        // Slider
+        final SeekBar sb = findViewById(R.id.seekBar);
 
         Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.drawable.image);
 
         Bitmap preview = makePreview(image);
 
         RoundedBitmapDrawable image_d = RoundedBitmapDrawableFactory.create(this.getResources(), preview);
-        image_d.setCornerRadius(45);
+        image_d.setCornerRadius(Settings.CORNER_RADIUS);
 
 
-        for(TextView tv : buttons) {
+        for(final TextView tv : buttons) {
             tv.setCompoundDrawablesRelativeWithIntrinsicBounds(null, image_d, null, null);
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for(final TextView tv2 : buttons) {
+                        tv2.setTextColor(Color.parseColor("#C5C5C5"));
+                    }
+                    tv.setTextColor(Color.WHITE);
+                    sb.setProgress(0);
+                    sb.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
     }
@@ -69,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             result = Bitmap.createBitmap(image, 0, offset, dimension, dimension);
         }
 
-        return Bitmap.createScaledBitmap(result, 150, 150, true);
+        return Bitmap.createScaledBitmap(result, Settings.PREVIEW_SIZE, Settings.PREVIEW_SIZE, true);
     }
 
 
