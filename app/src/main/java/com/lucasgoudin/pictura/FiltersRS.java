@@ -24,4 +24,23 @@ public class FiltersRS {
         grayScript.destroy();
         rs.destroy();
     }
+
+    public static void brightnessRS (Bitmap bmp, AppCompatActivity context, float brightness) {
+        RenderScript rs = RenderScript.create(context);
+
+        Allocation input = Allocation.createFromBitmap(rs, bmp);
+        Allocation output = Allocation.createTyped(rs, input.getType());
+
+        ScriptC_brightness grayScript = new ScriptC_brightness(rs);
+
+        grayScript.set_value(brightness);
+        grayScript.forEach_brightness(input, output);
+
+        output.copyTo(bmp);
+
+        input.destroy();
+        output.destroy();
+        grayScript.destroy();
+        rs.destroy();
+    }
 }

@@ -64,11 +64,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Slider
         final SeekBar sb = findViewById(R.id.seekBar);
+        sb.setMax(200);
+        sb.setProgress(100);
 
 
         //Previews
         Preview toGrayPreview = new Preview(image, Filter.TOGRAY, this);
-        Preview brightnessPreview = new Preview(image, Filter.NOFILTER, this);
+        Preview brightnessPreview = new Preview(image, Filter.BRIGHTNESS, this);
         Preview contrastPreview = new Preview(image, Filter.NOFILTER, this);
         Preview improvePreview = new Preview(image, Filter.NOFILTER, this);
         Preview tintPreview = new Preview(image, Filter.NOFILTER, this);
@@ -88,15 +90,30 @@ public class MainActivity extends AppCompatActivity {
         toGrayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                for(final TextView tv2 : buttons) {
-                    tv2.setTextColor(Color.parseColor("#C5C5C5"));
+                for(TextView tv : buttons) {
+                    tv.setTextColor(Color.parseColor("#C5C5C5"));
                 }
                 toGrayBtn.setTextColor(Color.WHITE);
+                resetImage(image);
                 FiltersRS.toGrayRS(image, MainActivity.this);
                 updateImage(image);
             }
         });
+
+        brightnessBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(TextView tv : buttons) {
+                    tv.setTextColor(Color.parseColor("#C5C5C5"));
+                }
+                brightnessBtn.setTextColor(Color.WHITE);
+                resetImage(image);
+                FiltersRS.brightnessRS(image, MainActivity.this, 0.001f);
+                updateImage(image);
+            }
+        });
+
+
 
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +130,12 @@ public class MainActivity extends AppCompatActivity {
 
     void updateImage(Bitmap bmp) {
         photoView.setImageBitmap(bmp);
+    }
+    Bitmap getImage() {
+        return image;
+    }
+    void resetImage(Bitmap bmp) {
+        image = base_image;
     }
 
 

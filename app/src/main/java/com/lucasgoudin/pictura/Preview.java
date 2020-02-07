@@ -48,7 +48,8 @@ public class Preview  {
             case TOGRAY:
                 FiltersRS.toGrayRS(bmp, context);
                 break;
-            case NOFILTER:
+            case BRIGHTNESS:
+                FiltersRS.brightnessRS(bmp, context, 0.001f);
                 break;
         }
     }
