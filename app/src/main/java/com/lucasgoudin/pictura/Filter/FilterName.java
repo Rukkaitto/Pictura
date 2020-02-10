@@ -1,4 +1,4 @@
-package com.lucasgoudin.pictura;
+package com.lucasgoudin.pictura.Filter;
 
 public enum FilterName {
     TOGRAY,
@@ -7,5 +7,4 @@ public enum FilterName {
     IMPROVE,
     TINT,
     BLUR,
-    NOFILTER
 }

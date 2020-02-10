@@ -7,18 +7,19 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
-
 import com.github.chrisbanes.photoview.PhotoView;
+import com.lucasgoudin.pictura.Filter.Filter;
+import com.lucasgoudin.pictura.Filter.FilterName;
+import com.lucasgoudin.pictura.Filter.FilterRS;
+import com.lucasgoudin.pictura.Filter.FilterPreview;
 
 import java.util.ArrayList;
 
@@ -104,12 +105,12 @@ public class MainActivity extends AppCompatActivity {
         TextView blurBtn = findViewById(R.id.blurBtn);
 
         // Filters
-        Filter toGray = new Filter(toGrayBtn, new Preview(image, new FilterRS(FilterName.TOGRAY), this));
-        Filter brightness = new Filter(brightnessBtn, new Preview(image, new FilterRS(FilterName.BRIGHTNESS),this));
-        Filter contrast = new Filter(contrastBtn, new Preview(image, new FilterRS(FilterName.CONTRAST),this));
-        Filter improve = new Filter(improveBtn, new Preview(image, new FilterRS(FilterName.IMPROVE),this));
-        Filter tint = new Filter(tintBtn, new Preview(image, new FilterRS(FilterName.TINT),this));
-        Filter blur = new Filter(blurBtn, new Preview(image, new FilterRS(FilterName.BLUR),this));
+        Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY), this));
+        Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS),this));
+        Filter contrast = new Filter(contrastBtn, new FilterPreview(image, new FilterRS(FilterName.CONTRAST),this));
+        Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE),this));
+        Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT),this));
+        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR),this));
 
         filters = new ArrayList<>();
         filters.add(toGray);
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if(requestCode == RESULT_FIRST_USER && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
             try {
                 this.image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);

@@ -1,26 +1,24 @@
-package com.lucasgoudin.pictura;
+package com.lucasgoudin.pictura.Filter;
 
 import android.graphics.Bitmap;
+
+import com.lucasgoudin.pictura.Settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
-class Preview  {
+public class FilterPreview {
     private Bitmap bmp;
     private RoundedBitmapDrawable bmp_d;
     private AppCompatActivity context;
     private FilterRS filterRS;
 
-    Preview(Bitmap bmp, FilterRS filterRS, AppCompatActivity context) {
-        this.bmp = scaleBitmap(bmp);
+    public FilterPreview(Bitmap bmp, FilterRS filterRS, AppCompatActivity context) {
         this.context = context;
         this.filterRS = filterRS;
 
-        applyFilter();
-
-        bmp_d = RoundedBitmapDrawableFactory.create(context.getResources(), this.bmp);
-        bmp_d.setCornerRadius(Settings.CORNER_RADIUS);
+        update(bmp);
     }
 
     private Bitmap scaleBitmap(Bitmap image) {
@@ -40,21 +38,22 @@ class Preview  {
             result = Bitmap.createBitmap(image, 0, offset, dimension, dimension);
         }
 
-        return Bitmap.createScaledBitmap(result, Settings.PREVIEW_SIZE, Settings.PREVIEW_SIZE, true);
+        float density = context.getResources().getDisplayMetrics().density;
+        return Bitmap.createScaledBitmap(result, (int) (Settings.PREVIEW_SIZE * density), (int) (Settings.PREVIEW_SIZE * density), true);
     }
 
     private void applyFilter() {
         filterRS.apply(bmp, context);
     }
 
-    void update(Bitmap image) {
+    public void update(Bitmap image) {
         this.bmp = scaleBitmap(image);
         applyFilter();
         bmp_d = RoundedBitmapDrawableFactory.create(context.getResources(), this.bmp);
         bmp_d.setCornerRadius(Settings.CORNER_RADIUS);
     }
 
-    RoundedBitmapDrawable getPreview() {
+    public RoundedBitmapDrawable getPreview() {
         return bmp_d;
     }
 
