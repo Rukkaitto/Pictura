@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     Bitmap image;
     Bitmap base_image;
     PhotoView photoView;
+    ArrayList<Preview> previews;
+    ArrayList<TextView> buttons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         photoView = findViewById(R.id.photo_view);
         image = BitmapFactory.decodeResource(this.getResources(), R.drawable.image);
         base_image = BitmapFactory.decodeResource(this.getResources(), R.drawable.image);
-        updateImage(image);
+        updateImage();
 
 
         //Buttons
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView tintBtn = findViewById(R.id.tintBtn);
         final TextView blurBtn = findViewById(R.id.blurBtn);
 
-        final ArrayList<TextView> buttons = new ArrayList<TextView>();
+        buttons = new ArrayList<>();
         buttons.add(toGrayBtn);
         buttons.add(brightnessBtn);
         buttons.add(contrastBtn);
@@ -84,13 +86,16 @@ public class MainActivity extends AppCompatActivity {
         Preview tintPreview = new Preview(image, Filter.NOFILTER, this);
         Preview blurPreview = new Preview(image, Filter.NOFILTER, this);
 
-        toGrayBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, toGrayPreview.getPreview(), null, null);
-        brightnessBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, brightnessPreview.getPreview(), null, null);
-        contrastBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, contrastPreview.getPreview(), null, null);
-        improveBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, improvePreview.getPreview(), null, null);
-        tintBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, tintPreview.getPreview(), null, null);
-        blurBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, blurPreview.getPreview(), null, null);
+        previews = new ArrayList<>();
+        previews.add(toGrayPreview);
+        previews.add(brightnessPreview);
+        previews.add(contrastPreview);
+        previews.add(improvePreview);
+        previews.add(tintPreview);
+        previews.add(blurPreview);
 
+
+        updatePreviews();
 
 
 
@@ -100,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
                 for(TextView tv : buttons) {
                     tv.setTextColor(Color.parseColor("#C5C5C5"));
                 }
+                resetImage();
                 toGrayBtn.setTextColor(Color.WHITE);
-                resetImage(image);
                 FiltersRS.toGrayRS(image, MainActivity.this);
-                updateImage(image);
+                updateImage();
             }
         });
 
@@ -113,10 +118,10 @@ public class MainActivity extends AppCompatActivity {
                 for(TextView tv : buttons) {
                     tv.setTextColor(Color.parseColor("#C5C5C5"));
                 }
+                resetImage();
                 brightnessBtn.setTextColor(Color.WHITE);
-                resetImage(image);
                 FiltersRS.brightnessRS(image, MainActivity.this, 0.001f);
-                updateImage(image);
+                updateImage();
             }
         });
 
@@ -125,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateImage(base_image);
+                resetImage();
                 for(TextView tv : buttons) {
                     tv.setTextColor(Color.parseColor("#C5C5C5"));
                 }
@@ -136,25 +141,39 @@ public class MainActivity extends AppCompatActivity {
         loadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGalery();
+                openGallery();
             }
         });
 
     }
 
-    void openGalery() {
+    void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 1);
     }
 
-    void updateImage(Bitmap bmp) {
-        photoView.setImageBitmap(bmp);
+    void updateImage() {
+        photoView.setImageBitmap(image);
     }
+
     Bitmap getImage() {
         return image;
     }
-    void resetImage(Bitmap bmp) {
-        image = base_image;
+
+    void resetImage() {
+        image = base_image.copy(base_image.getConfig(), true);
+        updateImage();
+    }
+
+    void updatePreviews() {
+        int i = 0;
+        for(Preview p : previews) {
+            p.update(image);
+        }
+        for(TextView tv : buttons) {
+            tv.setCompoundDrawablesRelativeWithIntrinsicBounds(null, previews.get(i).getPreview(), null, null);
+            i++;
+        }
     }
 
 
@@ -164,7 +183,14 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            photoView.setImageURI(imageUri);
+            try {
+                this.image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                this.base_image = image.copy(image.getConfig(), true);
+                updateImage();
+                updatePreviews();
+            } catch (Exception e) {
+                System.out.println("File not found!");
+            }
         }
     }
 

@@ -54,6 +54,13 @@ public class Preview  {
         }
     }
 
+    public void update(Bitmap image) {
+        this.bmp = scaleBitmap(image);
+        applyFilter();
+        bmp_d = RoundedBitmapDrawableFactory.create(context.getResources(), this.bmp);
+        bmp_d.setCornerRadius(Settings.CORNER_RADIUS);
+    }
+
     public RoundedBitmapDrawable getPreview() {
         return bmp_d;
     }
