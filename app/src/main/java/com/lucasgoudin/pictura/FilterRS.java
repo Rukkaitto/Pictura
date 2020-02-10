@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.renderscript.Allocation;
 import androidx.renderscript.RenderScript;
+import androidx.renderscript.ScriptC;
 
 class FilterRS {
     private FilterName filterName;

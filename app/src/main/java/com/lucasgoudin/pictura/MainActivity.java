@@ -103,21 +103,13 @@ public class MainActivity extends AppCompatActivity {
         TextView tintBtn = findViewById(R.id.tintBtn);
         TextView blurBtn = findViewById(R.id.blurBtn);
 
-        //Previews
-        Preview toGrayPreview = new Preview(image, new FilterRS(FilterName.TOGRAY), this);
-        Preview brightnessPreview = new Preview(image, new FilterRS(FilterName.BRIGHTNESS),this);
-        Preview contrastPreview = new Preview(image, new FilterRS(FilterName.CONTRAST),this);
-        Preview improvePreview = new Preview(image, new FilterRS(FilterName.IMPROVE),this);
-        Preview tintPreview = new Preview(image, new FilterRS(FilterName.TINT),this);
-        Preview blurPreview = new Preview(image, new FilterRS(FilterName.BLUR),this);
-
         // Filters
-        Filter toGray = new Filter(toGrayBtn, toGrayPreview);
-        Filter brightness = new Filter(brightnessBtn, brightnessPreview);
-        Filter contrast = new Filter(contrastBtn, contrastPreview);
-        Filter improve = new Filter(improveBtn, improvePreview);
-        Filter tint = new Filter(tintBtn, tintPreview);
-        Filter blur = new Filter(blurBtn, blurPreview);
+        Filter toGray = new Filter(toGrayBtn, new Preview(image, new FilterRS(FilterName.TOGRAY), this));
+        Filter brightness = new Filter(brightnessBtn, new Preview(image, new FilterRS(FilterName.BRIGHTNESS),this));
+        Filter contrast = new Filter(contrastBtn, new Preview(image, new FilterRS(FilterName.CONTRAST),this));
+        Filter improve = new Filter(improveBtn, new Preview(image, new FilterRS(FilterName.IMPROVE),this));
+        Filter tint = new Filter(tintBtn, new Preview(image, new FilterRS(FilterName.TINT),this));
+        Filter blur = new Filter(blurBtn, new Preview(image, new FilterRS(FilterName.BLUR),this));
 
         filters = new ArrayList<>();
         filters.add(toGray);
