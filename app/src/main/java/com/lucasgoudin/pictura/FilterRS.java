@@ -6,8 +6,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.renderscript.Allocation;
 import androidx.renderscript.RenderScript;
 
-public class FiltersRS {
-    public static void toGrayRS (Bitmap bmp, AppCompatActivity context) {
+class FilterRS {
+    private FilterName filterName;
+
+    FilterRS(FilterName filterName) {
+        this.filterName = filterName;
+    }
+
+    void apply(Bitmap bmp, AppCompatActivity context) {
+        switch (filterName) {
+            case TOGRAY:
+                toGrayRS(bmp, context);
+                break;
+            case BRIGHTNESS:
+                brightnessRS(bmp, context);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void toGrayRS (Bitmap bmp, AppCompatActivity context) {
         RenderScript rs = RenderScript.create(context);
 
         Allocation input = Allocation.createFromBitmap(rs, bmp);
@@ -25,7 +44,8 @@ public class FiltersRS {
         rs.destroy();
     }
 
-    public static void brightnessRS (Bitmap bmp, AppCompatActivity context, float brightness) {
+    private void brightnessRS (Bitmap bmp, AppCompatActivity context) {
+        float brightness = 0.001f;
         RenderScript rs = RenderScript.create(context);
 
         Allocation input = Allocation.createFromBitmap(rs, bmp);

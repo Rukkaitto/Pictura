@@ -6,16 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
-public class Preview  {
+class Preview  {
     private Bitmap bmp;
     private RoundedBitmapDrawable bmp_d;
-    private Filter filter;
     private AppCompatActivity context;
+    private FilterRS filterRS;
 
-    public Preview(Bitmap bmp, Filter filter, AppCompatActivity context) {
+    Preview(Bitmap bmp, FilterRS filterRS, AppCompatActivity context) {
         this.bmp = scaleBitmap(bmp);
-        this.filter = filter;
         this.context = context;
+        this.filterRS = filterRS;
 
         applyFilter();
 
@@ -44,25 +44,22 @@ public class Preview  {
     }
 
     private void applyFilter() {
-        switch(this.filter) {
-            case TOGRAY:
-                FiltersRS.toGrayRS(bmp, context);
-                break;
-            case BRIGHTNESS:
-                FiltersRS.brightnessRS(bmp, context, 0.001f);
-                break;
-        }
+        filterRS.apply(bmp, context);
     }
 
-    public void update(Bitmap image) {
+    void update(Bitmap image) {
         this.bmp = scaleBitmap(image);
         applyFilter();
         bmp_d = RoundedBitmapDrawableFactory.create(context.getResources(), this.bmp);
         bmp_d.setCornerRadius(Settings.CORNER_RADIUS);
     }
 
-    public RoundedBitmapDrawable getPreview() {
+    RoundedBitmapDrawable getPreview() {
         return bmp_d;
+    }
+
+    FilterRS getFilterRS() {
+        return filterRS;
     }
 
 }
