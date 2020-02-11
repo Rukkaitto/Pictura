@@ -8,6 +8,7 @@
     <string name="improve">Amélioration</string>
     <string name="tint">Teinte</string>
     <string name="blur">Flou</string>
+    <string name="isolate">Isoler</string>
 
     <!-- Button icons descriptions-->
     <string name="save">Sauvegarder</string>

@@ -6,5 +6,6 @@ public enum FilterName {
     CONTRAST,
     IMPROVE,
     TINT,
+    ISOLATE,
     BLUR,
 }

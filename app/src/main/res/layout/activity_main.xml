@@ -212,6 +212,23 @@
                 android:textSize="@dimen/text_size" />
 
             <TextView
+                android:id="@+id/isolateBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableTop="@mipmap/ic_launcher"
+                android:drawablePadding="@dimen/text_padding"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/icons_padding"
+                android:paddingRight="@dimen/icons_padding"
+                android:text="@string/isolate"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size" />
+
+            <TextView
                 android:id="@+id/blurBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

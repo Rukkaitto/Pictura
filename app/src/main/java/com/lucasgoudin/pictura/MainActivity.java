@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         TextView improveBtn = findViewById(R.id.improveBtn);
         TextView tintBtn = findViewById(R.id.tintBtn);
         TextView blurBtn = findViewById(R.id.blurBtn);
+        TextView isolateBtn = findViewById(R.id.isolateBtn);
 
         // Filters
         Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY), this));
@@ -151,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         Filter contrast = new Filter(contrastBtn, new FilterPreview(image, new FilterRS(FilterName.CONTRAST),this));
         Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE),this));
         Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT),this), 0, 359);
+        Filter isolate = new Filter(isolateBtn, new FilterPreview(image, new FilterRS(FilterName.ISOLATE),this), 0, 359);
         Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR),this), 0, 1);
 
         filters = new ArrayList<>();
@@ -158,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         filters.add(brightness);
         filters.add(contrast);
         filters.add(improve);
+        filters.add(isolate);
         filters.add(tint);
         filters.add(blur);
 
