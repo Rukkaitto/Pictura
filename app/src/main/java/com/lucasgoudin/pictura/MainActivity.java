@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS),this), -0.001f, 0.001f);
         Filter contrast = new Filter(contrastBtn, new FilterPreview(image, new FilterRS(FilterName.CONTRAST),this));
         Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE),this));
-        Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT),this), 0, 360);
+        Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT),this), 0, 359);
         Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR),this), 0, 1);
 
         filters = new ArrayList<>();

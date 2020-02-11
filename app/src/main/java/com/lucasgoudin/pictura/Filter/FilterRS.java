@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.lucasgoudin.pictura.ScriptC_brightness;
 import com.lucasgoudin.pictura.ScriptC_gray;
+import com.lucasgoudin.pictura.ScriptC_tint;
 import com.lucasgoudin.pictura.Settings;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,12 @@ public class FilterRS {
                 brightnessScript.forEach_brightness(input, output);
                 brightnessScript.destroy();
                 break;
+            case TINT:
+                ScriptC_tint tintScript = new ScriptC_tint(rs);
+                tintScript.set_hue(0);
+                tintScript.forEach_tint(input, output);
+                tintScript.destroy();
+                break;
             default:
                 return;
         }
@@ -63,6 +70,12 @@ public class FilterRS {
                 brightnessScript.set_value(value);
                 brightnessScript.forEach_brightness(input, output);
                 brightnessScript.destroy();
+                break;
+            case TINT:
+                ScriptC_tint tintScript = new ScriptC_tint(rs);
+                tintScript.set_hue(value);
+                tintScript.forEach_tint(input, output);
+                tintScript.destroy();
                 break;
             default:
                 return;
