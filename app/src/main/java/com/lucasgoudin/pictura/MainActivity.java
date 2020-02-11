@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     ImageButton saveBtn, loadBtn, cameraBtn, resetBtn;
     PhotoView photoView;
     ArrayList<Filter> filters;
+    Filter selectedFilter;
+    SeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,41 +40,42 @@ public class MainActivity extends AppCompatActivity {
 
         initializePhotoView();
         initializeButtons();
-        makeFilters();
+        initializeSeekBar();
 
+        makeFilters();
         updatePreviews();
 
     }
 
-    void openGallery() {
+    private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 1);
     }
 
-    void updateImage() {
+    private void updateImage() {
         photoView.setImageBitmap(image);
     }
 
-    void resetImage() {
+    private void resetImage() {
         image = base_image.copy(base_image.getConfig(), true);
         updateImage();
     }
 
-    void updatePreviews() {
+    private void updatePreviews() {
         for(Filter f : filters) {
             f.getFilterPreview().update(image);
             f.getFilterBtn().setCompoundDrawablesRelativeWithIntrinsicBounds(null, f.getFilterPreview().getPreview(), null, null);
         }
     }
 
-    void initializePhotoView() {
+    private void initializePhotoView() {
         photoView = findViewById(R.id.photo_view);
         image = BitmapFactory.decodeResource(this.getResources(), R.drawable.image);
         base_image = BitmapFactory.decodeResource(this.getResources(), R.drawable.image);
         updateImage();
     }
 
-    void initializeButtons() {
+    private void initializeButtons() {
         saveBtn = findViewById(R.id.saveBtn);
         loadBtn = findViewById(R.id.loadBtn);
         cameraBtn = findViewById(R.id.cameraBtn);
@@ -81,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 resetImage();
+                resetSeekBar();
                 for(Filter f : filters) {
                     f.getFilterBtn().setTextColor(Color.parseColor("#C5C5C5"));
                 }
@@ -95,7 +100,43 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void makeFilters() {
+    private float map(float x, float minA, float maxA, float minB, float maxB) {
+        return ((x - minA) / maxA) * (maxB - minB) + minB;
+    }
+
+    private void initializeSeekBar() {
+        seekBar = findViewById(R.id.seekBar);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float value = map((float) progress, 0f, seekBar.getMax(),selectedFilter.getSeekBarMin(), selectedFilter.getSeekBarMax());
+                selectedFilter.setSeekBarValue(value);
+                resetImage();
+                selectedFilter.apply(image, MainActivity.this);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    private void resetSeekBar() {
+        if(selectedFilter.getSeekBarMin() < 0) {
+            seekBar.setProgress(seekBar.getMax() / 2);
+        } else {
+            seekBar.setProgress(0);
+        }
+    }
+
+    private void makeFilters() {
         // Filter buttons
         TextView toGrayBtn = findViewById(R.id.toGrayBtn);
         TextView brightnessBtn = findViewById(R.id.brightnessBtn);
@@ -106,11 +147,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Filters
         Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY), this));
-        Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS),this));
+        Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS),this), -0.001f, 0.001f);
         Filter contrast = new Filter(contrastBtn, new FilterPreview(image, new FilterRS(FilterName.CONTRAST),this));
         Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE),this));
-        Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT),this));
-        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR),this));
+        Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT),this), 0, 360);
+        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR),this), 0, 1);
 
         filters = new ArrayList<>();
         filters.add(toGray);
@@ -129,6 +170,13 @@ public class MainActivity extends AppCompatActivity {
                         f1.getFilterBtn().setTextColor(Color.parseColor("#C5C5C5"));
                     }
                     resetImage();
+                    selectedFilter = filter;
+                    if(filter.hasSeekbar()) {
+                        seekBar.setVisibility(View.VISIBLE);
+                        resetSeekBar();
+                    } else {
+                        seekBar.setVisibility(View.INVISIBLE);
+                    }
                     filterBtn.setTextColor(Color.WHITE);
                     filter.apply(image, MainActivity.this);
                 }
