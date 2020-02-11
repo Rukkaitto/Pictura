@@ -84,8 +84,9 @@ public class MainActivity extends AppCompatActivity {
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resetImage();
                 resetSeekBar();
+                resetImage();
+                seekBar.setVisibility(View.INVISIBLE);
                 for(Filter f : filters) {
                     f.getFilterBtn().setTextColor(Color.parseColor("#C5C5C5"));
                 }
