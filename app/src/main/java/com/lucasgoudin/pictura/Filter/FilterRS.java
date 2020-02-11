@@ -7,6 +7,8 @@ import com.lucasgoudin.pictura.ScriptC_gray;
 import com.lucasgoudin.pictura.ScriptC_tint;
 import com.lucasgoudin.pictura.Settings;
 
+import java.util.Random;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.renderscript.Allocation;
 import androidx.renderscript.RenderScript;
@@ -38,7 +40,7 @@ public class FilterRS {
                 break;
             case TINT:
                 ScriptC_tint tintScript = new ScriptC_tint(rs);
-                tintScript.set_hue(0);
+                tintScript.set_hue(new Random().nextFloat() * 359);
                 tintScript.forEach_tint(input, output);
                 tintScript.destroy();
                 break;
