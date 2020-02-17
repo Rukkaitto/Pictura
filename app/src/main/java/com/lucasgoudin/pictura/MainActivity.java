@@ -144,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
         TextView contrastBtn = findViewById(R.id.contrastBtn);
         TextView improveBtn = findViewById(R.id.improveBtn);
         TextView tintBtn = findViewById(R.id.tintBtn);
-        TextView blurBtn = findViewById(R.id.blurBtn);
         TextView isolateBtn = findViewById(R.id.isolateBtn);
+        TextView blurBtn = findViewById(R.id.blurBtn);
 
         // Filters
         Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY), this));

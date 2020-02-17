@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.lucasgoudin.pictura.ScriptC_brightness;
 import com.lucasgoudin.pictura.ScriptC_gray;
+import com.lucasgoudin.pictura.ScriptC_isolate;
 import com.lucasgoudin.pictura.ScriptC_tint;
 import com.lucasgoudin.pictura.Settings;
 
@@ -44,6 +45,21 @@ public class FilterRS {
                 tintScript.forEach_tint(input, output);
                 tintScript.destroy();
                 break;
+            case ISOLATE:
+                ScriptC_isolate isolateScript = new ScriptC_isolate(rs);
+                isolateScript.set_hue(100.0f);
+                isolateScript.forEach_isolate(input, output);
+                isolateScript.destroy();
+                break;
+            case IMPROVE:
+                //TODO: égalisation (avec valeurs par défaut pour les previews)
+                break;
+            case CONTRAST:
+                //TODO: extension (avec valeurs par défaut pour les previews)
+                break;
+            case BLUR:
+                //TODO: convolution (avec valeurs par défaut pour les previews)
+                break;
             default:
                 return;
         }
@@ -78,6 +94,21 @@ public class FilterRS {
                 tintScript.set_hue(value);
                 tintScript.forEach_tint(input, output);
                 tintScript.destroy();
+                break;
+            case ISOLATE:
+                ScriptC_isolate isolateScript = new ScriptC_isolate(rs);
+                isolateScript.set_hue(value);
+                isolateScript.forEach_isolate(input, output);
+                isolateScript.destroy();
+                break;
+            case IMPROVE:
+                //TODO: égalisation
+                break;
+            case CONTRAST:
+                //TODO: extension
+                break;
+            case BLUR:
+                //TODO: convolution
                 break;
             default:
                 return;
