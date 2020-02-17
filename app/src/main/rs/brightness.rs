@@ -87,7 +87,10 @@ static float3 HSVtoColor(float3 hsv) {
 uchar4 RS_KERNEL brightness(uchar4 in) {
     const float4 pixelf = rsUnpackColor8888(in);
     float3 hsv = RGBtoHSV(pixelf);
-    hsv.z = hsv.z + value;
+    if(hsv.z <= 1 && hsv.z >= 0) {
+        hsv.z = hsv.z + value;
+    }
+
     const float3 newpixelf = HSVtoColor(hsv);
 
     return rsPackColorTo8888(newpixelf.r, newpixelf.g, newpixelf.b, 255.0f);

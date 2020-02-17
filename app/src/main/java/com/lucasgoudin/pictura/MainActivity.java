@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -22,6 +24,7 @@ import com.lucasgoudin.pictura.Filter.FilterName;
 import com.lucasgoudin.pictura.Filter.FilterRS;
 import com.lucasgoudin.pictura.Filter.FilterPreview;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Filters
         Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY), this));
-        Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS),this), -0.001f, 0.001f);
+        Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS),this), -0.005f, 0.005f);
         Filter contrast = new Filter(contrastBtn, new FilterPreview(image, new FilterRS(FilterName.CONTRAST),this));
         Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE),this));
         Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT),this), 0, 359);
@@ -194,6 +197,35 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == RESULT_FIRST_USER && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
+            String filename = data.getDataString();
+            ExifInterface exif = null;
+            try {
+                exif = new ExifInterface(filename);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            int orientation = 0;
+            if(exif != null) {
+                orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+            }
+
+            Matrix matrix = new Matrix();
+            matrix.postRotate(orientation);
+
+            try {
+                Bitmap sourceBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                Bitmap rotatedBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight(), matrix, true);
+                this.image = rotatedBitmap.copy(rotatedBitmap.getConfig(), true);
+                this.base_image = image.copy(image.getConfig(), true);
+                updateImage();
+                updatePreviews();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            /*
             try {
                 this.image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                 this.base_image = image.copy(image.getConfig(), true);
@@ -202,8 +234,12 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 System.out.println("File not found!");
             }
+
+             */
         }
     }
+
+
 
 }
 

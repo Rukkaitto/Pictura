@@ -88,7 +88,9 @@ static float3 HSVtoColor(float3 hsv) {
 uchar4 RS_KERNEL isolate(uchar4 in) {
     const float4 pixelf = rsUnpackColor8888(in);
     float3 hsv = RGBtoHSV(pixelf);
-    if(hsv.x > 10.0f && hsv.x < 355.0f) {
+    float range = 50;
+
+    if(hsv.x < hue - range/2 || hsv.x > hue + range/2) {
         const float gray = dot(pixelf, weight);
         return rsPackColorTo8888 (gray, gray, gray, pixelf.a);
     }

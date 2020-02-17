@@ -22,6 +22,7 @@ public class FilterRS {
     }
 
     void apply (Bitmap bmp, AppCompatActivity context) {
+
         RenderScript rs = RenderScript.create(context);
 
         Allocation input = Allocation.createFromBitmap(rs, bmp);
@@ -47,19 +48,13 @@ public class FilterRS {
                 break;
             case ISOLATE:
                 ScriptC_isolate isolateScript = new ScriptC_isolate(rs);
-                isolateScript.set_hue(100.0f);
+                isolateScript.set_hue(0.0f);
                 isolateScript.forEach_isolate(input, output);
                 isolateScript.destroy();
                 break;
-            case IMPROVE:
                 //TODO: égalisation (avec valeurs par défaut pour les previews)
-                break;
-            case CONTRAST:
                 //TODO: extension (avec valeurs par défaut pour les previews)
-                break;
-            case BLUR:
                 //TODO: convolution (avec valeurs par défaut pour les previews)
-                break;
             default:
                 return;
         }
@@ -101,15 +96,9 @@ public class FilterRS {
                 isolateScript.forEach_isolate(input, output);
                 isolateScript.destroy();
                 break;
-            case IMPROVE:
                 //TODO: égalisation
-                break;
-            case CONTRAST:
                 //TODO: extension
-                break;
-            case BLUR:
                 //TODO: convolution
-                break;
             default:
                 return;
         }
