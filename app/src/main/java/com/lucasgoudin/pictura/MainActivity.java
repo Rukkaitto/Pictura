@@ -50,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void openCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, 1);
+        }
+    }
+
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 1);
@@ -100,6 +107,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openGallery();
+            }
+        });
+
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCamera();
             }
         });
     }
@@ -195,7 +209,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == RESULT_FIRST_USER && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
+            Bundle extras = data.getExtras();
+            this.image = (Bitmap) extras.get("data");
+            this.base_image = this.image;
+            updateImage();
+            updatePreviews();
+        }
+
+        if(requestCode == RESULT_FIRST_USER && resultCode == RESULT_OK && data != null && data.getData() != null ) {
+
             Uri imageUri = data.getData();
             String filename = data.getDataString();
             ExifInterface exif = null;
