@@ -15,6 +15,7 @@ import android.os.Bundle;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -27,10 +28,13 @@ import com.lucasgoudin.pictura.Filter.FilterRS;
 import com.lucasgoudin.pictura.Filter.FilterPreview;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.stream.Stream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     Filter selectedFilter;
     SeekBar seekBar;
     String currentPhotoPath;
+
+    int OPEN_GALLERY = 1;
+    int OPEN_CAMERA = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,14 +97,14 @@ public class MainActivity extends AppCompatActivity {
                         "com.lucasgoudin.pictura.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, 2);
+                startActivityForResult(takePictureIntent, OPEN_CAMERA);
             }
         }
     }
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, OPEN_GALLERY);
     }
 
     private void updateImage() {
@@ -185,14 +192,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetSeekBar() {
-        try {
+        if(selectedFilter != null) {
             if (selectedFilter.getSeekBarMin() < 0) {
                 seekBar.setProgress(seekBar.getMax() / 2);
             } else {
                 seekBar.setProgress(0);
             }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         }
     }
 
@@ -247,10 +252,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private Bitmap fixOrientation(Bitmap bmp, String filename) {
+    private Bitmap fixOrientation(Bitmap bmp, InputStream stream) {
         ExifInterface exif = null;
         try {
-            exif = new ExifInterface(filename);
+            exif = new ExifInterface(stream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -263,28 +268,28 @@ public class MainActivity extends AppCompatActivity {
         Matrix matrix = new Matrix();
 
         switch (orientation) {
-            case 2:
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
                 matrix.setScale(-1, 1);
                 break;
-            case 3:
+            case ExifInterface.ORIENTATION_ROTATE_180:
                 matrix.setRotate(180);
                 break;
-            case 4:
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
                 matrix.setRotate(180);
                 matrix.postScale(-1, 1);
                 break;
-            case 5:
+            case ExifInterface.ORIENTATION_TRANSPOSE:
                 matrix.setRotate(90);
                 matrix.postScale(-1, 1);
                 break;
-            case 6:
+            case ExifInterface.ORIENTATION_ROTATE_90:
                 matrix.setRotate(90);
                 break;
-            case 7:
+            case ExifInterface.ORIENTATION_TRANSVERSE:
                 matrix.setRotate(-90);
                 matrix.postScale(-1, 1);
                 break;
-            case 8:
+            case ExifInterface.ORIENTATION_ROTATE_270:
                 matrix.setRotate(-90);
                 break;
             default:
@@ -298,22 +303,36 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 2 && resultCode == RESULT_OK){
+        if(requestCode == OPEN_CAMERA && resultCode == RESULT_OK){
+            Uri imageUri = Uri.fromFile(new File(currentPhotoPath));
 
-            Bitmap rotatedBitmap = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath), currentPhotoPath);
+            InputStream stream = null;
+            try {
+                stream = getContentResolver().openInputStream(imageUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            Bitmap rotatedBitmap = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath), stream);
             this.image = rotatedBitmap.copy(rotatedBitmap.getConfig(), true);
             this.base_image = image.copy(image.getConfig(), true);
             updateImage();
             updatePreviews();
         }
 
-        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null ) {
+        if(requestCode == OPEN_GALLERY && resultCode == RESULT_OK && data != null && data.getData() != null ) {
 
             Uri imageUri = data.getData();
-            String filename = data.getDataString();
+            InputStream stream = null;
+            try {
+                stream = getContentResolver().openInputStream(imageUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
 
             try {
-                Bitmap rotatedBitmap = fixOrientation(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri), filename);
+                Bitmap rotatedBitmap = fixOrientation(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri), stream);
                 this.image = rotatedBitmap.copy(rotatedBitmap.getConfig(), true);
                 this.base_image = image.copy(image.getConfig(), true);
                 updateImage();
