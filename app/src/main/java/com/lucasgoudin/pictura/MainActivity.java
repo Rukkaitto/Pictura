@@ -27,8 +27,10 @@ import com.lucasgoudin.pictura.Filter.FilterName;
 import com.lucasgoudin.pictura.Filter.FilterRS;
 import com.lucasgoudin.pictura.Filter.FilterPreview;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -41,8 +43,8 @@ import java.util.Locale;
  */
 public class MainActivity extends AppCompatActivity {
 
-    Bitmap image, base_image;
-    ImageButton saveBtn, loadBtn, cameraBtn, resetBtn;
+    Bitmap image, base_image, full_image;
+    ImageButton saveBtn, shareBtn, loadBtn, cameraBtn, resetBtn;
     PhotoView photoView;
     HorizontalScrollView filterScrollView;
     ArrayList<Filter> filters;
@@ -129,6 +131,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Launches the Android Sharesheet intent
+     */
+    private void share() {
+        // Creates a file for the picture
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(photoFile != null) {
+            // Converts the full resolution bitmap to a byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            selectedFilter.apply(full_image);
+            // JPEG compression
+            full_image.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+            byte[] bitmapData = bos.toByteArray();
+
+            try {
+                // Writes the bytes to the file
+                FileOutputStream fos = new FileOutputStream(photoFile);
+                fos.write(bitmapData);
+                fos.flush();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Converts the File to a Uri
+            Uri uri = FileProvider.getUriForFile(this, "com.lucasgoudin.pictura.fileprovider", photoFile);
+
+            // Creates the intent
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            shareIntent.setType("image/jpeg");
+
+            // Starts the Sharesheet
+            startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share)));
+        }
+    }
+
+    /**
      * Updates the PhotoView content to be the current image bitmap
      */
     private void updateImage() {
@@ -162,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
         photoView = findViewById(R.id.photo_view);
         image = BitmapFactory.decodeResource(this.getResources(), R.drawable.image);
         base_image = BitmapFactory.decodeResource(this.getResources(), R.drawable.image);
+        full_image = BitmapFactory.decodeResource(this.getResources(), R.drawable.image);
         updateImage();
     }
 
@@ -170,9 +216,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initializeButtons() {
         saveBtn = findViewById(R.id.saveBtn);
+        shareBtn = findViewById(R.id.shareBtn);
         loadBtn = findViewById(R.id.loadBtn);
         cameraBtn = findViewById(R.id.cameraBtn);
         resetBtn = findViewById(R.id.resetBtn);
+
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                share();
+            }
+        });
 
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -411,6 +465,7 @@ public class MainActivity extends AppCompatActivity {
         Bitmap resizedBitmap = resizeBitmap(rotatedBitmap);
         this.image = resizedBitmap.copy(rotatedBitmap.getConfig(), true);
         this.base_image = image.copy(image.getConfig(), true);
+        this.full_image = rotatedBitmap.copy(rotatedBitmap.getConfig(), true);
         updateImage();
         updatePreviews();
     }
