@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         filterScrollView = findViewById(R.id.filters);
         noPhotoMessage = findViewById(R.id.noPhotoMessage);
-        filterScrollView.setVisibility(View.INVISIBLE);
-        photoView.setVisibility(View.INVISIBLE);
+        //filterScrollView.setVisibility(View.INVISIBLE);
+        //photoView.setVisibility(View.INVISIBLE);
 
     }
 
@@ -117,15 +117,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateImage() {
+        // Updates the photoView content to be the current image bitmap
         photoView.setImageBitmap(image);
     }
 
     private void resetImage() {
+        // Replaces the image with the base image to reset it
         image = base_image.copy(base_image.getConfig(), true);
         updateImage();
     }
 
     private void updatePreviews() {
+        // For each filter, update the preview
         for(Filter f : filters) {
             f.getFilterPreview().update(image);
             f.getFilterBtn().setCompoundDrawablesRelativeWithIntrinsicBounds(null, f.getFilterPreview().getPreview(), null, null);
@@ -133,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializePhotoView() {
+        // Creates the photoview and sets the default image
         photoView = findViewById(R.id.photo_view);
         image = BitmapFactory.decodeResource(this.getResources(), R.drawable.image);
         base_image = BitmapFactory.decodeResource(this.getResources(), R.drawable.image);
@@ -140,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeButtons() {
+        // Sets the buttons' on click functionality (save, load, and reset)
         saveBtn = findViewById(R.id.saveBtn);
         loadBtn = findViewById(R.id.loadBtn);
         cameraBtn = findViewById(R.id.cameraBtn);
@@ -148,9 +153,13 @@ public class MainActivity extends AppCompatActivity {
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Resets the seekbar to its initial value
                 resetSeekBar();
+                // Resets the image
                 resetImage();
+                // Hides the seekbar
                 seekBar.setVisibility(View.INVISIBLE);
+                // For each filter, resets the text to its default color
                 for(Filter f : filters) {
                     f.getFilterBtn().setTextColor(Color.parseColor("#C5C5C5"));
                 }
@@ -172,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Takes a value in an interval and interpolates it to another interval ; useful for the seekbar logic
     private float map(float x, float minA, float maxA, float minB, float maxB) {
         return ((x - minA) / maxA) * (maxB - minB) + minB;
     }
@@ -182,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // The value of the seekbar, which is between 0 and 100, is mapped to the minimum and the maximum values of the selected filter
                 float value = map((float) progress, 0f, seekBar.getMax(),selectedFilter.getSeekBarMin(), selectedFilter.getSeekBarMax());
                 selectedFilter.setSeekBarValue(value);
                 resetImage();
@@ -201,7 +212,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetSeekBar() {
+        // Ensures the app doesn't crash when no photo is chosen
         if(selectedFilter != null) {
+            // If the seekbar allows negative values, it is reset to half of the bar, otherwise it is reset to zero
             if (selectedFilter.getSeekBarMin() < 0) {
                 seekBar.setProgress(seekBar.getMax() / 2);
             } else {
@@ -229,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
         Filter isolate = new Filter(isolateBtn, new FilterPreview(image, new FilterRS(FilterName.ISOLATE),this), 0, 359);
         Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR),this), 0, 1);
 
+        // Adds all the filters to the list
         filters = new ArrayList<>();
         filters.add(toGray);
         filters.add(brightness);
@@ -240,27 +254,33 @@ public class MainActivity extends AppCompatActivity {
 
         for(final Filter filter : filters) {
             final TextView filterBtn = filter.getFilterBtn();
+            // Sets the filter buttons's functionality
             filterBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // Resets the title colors
                     for(Filter f1 : filters) {
                         f1.getFilterBtn().setTextColor(Color.parseColor("#C5C5C5"));
                     }
                     resetImage();
                     selectedFilter = filter;
+                    // If the filter has a seekbar, make it visible and reset it, otherwise hide it
                     if(filter.hasSeekbar()) {
                         seekBar.setVisibility(View.VISIBLE);
                         resetSeekBar();
                     } else {
                         seekBar.setVisibility(View.INVISIBLE);
                     }
+                    // Highlights the filter's title text
                     filterBtn.setTextColor(Color.WHITE);
+                    // Apply the filter to the image
                     filter.apply(image, MainActivity.this);
                 }
             });
         }
     }
 
+    // Gets the exif data from the bitmap and rotates the image with a matrix depending on the photo's orientation
     private Bitmap fixOrientation(Bitmap bmp, InputStream stream) {
         ExifInterface exif = null;
         try {
@@ -308,6 +328,21 @@ public class MainActivity extends AppCompatActivity {
         return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
     }
 
+    private Bitmap resizeBitmap(Bitmap bmp) {
+        // Gets the dimensions of the PhotoView
+        int targetW = photoView.getWidth();
+        int targetH = photoView.getHeight();
+
+        int photoW = bmp.getWidth();
+        int photoH = bmp.getHeight();
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        // Returns the downscaled bitmap
+        return Bitmap.createScaledBitmap(bmp, bmp.getWidth() / scaleFactor, bmp.getHeight() / scaleFactor, true);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -323,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Bitmap rotatedBitmap = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath), stream);
-            this.image = rotatedBitmap.copy(rotatedBitmap.getConfig(), true);
+            this.image = resizeBitmap(rotatedBitmap.copy(rotatedBitmap.getConfig(), true));
             this.base_image = image.copy(image.getConfig(), true);
             updateImage();
             updatePreviews();
@@ -341,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 Bitmap rotatedBitmap = fixOrientation(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri), stream);
-                this.image = rotatedBitmap.copy(rotatedBitmap.getConfig(), true);
+                this.image = resizeBitmap(rotatedBitmap.copy(rotatedBitmap.getConfig(), true));
                 this.base_image = image.copy(image.getConfig(), true);
                 updateImage();
                 updatePreviews();
