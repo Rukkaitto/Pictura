@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         filterScrollView = findViewById(R.id.filters);
         noPhotoMessage = findViewById(R.id.noPhotoMessage);
-        //filterScrollView.setVisibility(View.INVISIBLE);
-        //photoView.setVisibility(View.INVISIBLE);
+        filterScrollView.setVisibility(View.INVISIBLE);
+        photoView.setVisibility(View.INVISIBLE);
 
     }
 
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 float value = map((float) progress, 0f, seekBar.getMax(),selectedFilter.getSeekBarMin(), selectedFilter.getSeekBarMax());
                 selectedFilter.setSeekBarValue(value);
                 resetImage();
-                selectedFilter.apply(image, MainActivity.this);
+                selectedFilter.apply(image);
             }
 
             @Override
@@ -234,13 +234,13 @@ public class MainActivity extends AppCompatActivity {
         TextView blurBtn = findViewById(R.id.blurBtn);
 
         // Filters
-        Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY), this));
-        Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS),this), -0.005f, 0.005f);
-        Filter contrast = new Filter(contrastBtn, new FilterPreview(image, new FilterRS(FilterName.CONTRAST),this));
-        Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE),this));
-        Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT),this), 0, 359);
-        Filter isolate = new Filter(isolateBtn, new FilterPreview(image, new FilterRS(FilterName.ISOLATE),this), 0, 359);
-        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR),this), 0, 1);
+        Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY, this)));
+        Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS, this)), -0.005f, 0.005f);
+        Filter contrast = new Filter(contrastBtn, new FilterPreview(image, new FilterRS(FilterName.CONTRAST, this)));
+        Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE, this)));
+        Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT, this)), 0, 359);
+        Filter isolate = new Filter(isolateBtn, new FilterPreview(image, new FilterRS(FilterName.ISOLATE, this)), 0, 359);
+        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR, this)), 0, 1);
 
         // Adds all the filters to the list
         filters = new ArrayList<>();
@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
                     // Highlights the filter's title text
                     filterBtn.setTextColor(Color.WHITE);
                     // Apply the filter to the image
-                    filter.apply(image, MainActivity.this);
+                    filter.apply(image);
                 }
             });
         }
@@ -330,17 +330,17 @@ public class MainActivity extends AppCompatActivity {
 
     private Bitmap resizeBitmap(Bitmap bmp) {
         // Gets the dimensions of the PhotoView
-        int targetW = photoView.getWidth();
-        int targetH = photoView.getHeight();
+        float targetW = photoView.getWidth();
+        float targetH = photoView.getHeight();
 
-        int photoW = bmp.getWidth();
-        int photoH = bmp.getHeight();
+        float photoW = bmp.getWidth();
+        float photoH = bmp.getHeight();
 
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        float scaleFactor = Math.min(photoW/targetW, photoH/targetH) * 2;
 
         // Returns the downscaled bitmap
-        return Bitmap.createScaledBitmap(bmp, bmp.getWidth() / scaleFactor, bmp.getHeight() / scaleFactor, true);
+        return Bitmap.createScaledBitmap(bmp, (int)(photoW / scaleFactor), (int)(photoH / scaleFactor), true);
     }
 
     @Override
@@ -358,7 +358,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Bitmap rotatedBitmap = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath), stream);
-            this.image = resizeBitmap(rotatedBitmap.copy(rotatedBitmap.getConfig(), true));
+            Bitmap resizedBitmap = resizeBitmap(rotatedBitmap);
+            this.image = resizedBitmap.copy(rotatedBitmap.getConfig(), true);
             this.base_image = image.copy(image.getConfig(), true);
             updateImage();
             updatePreviews();
@@ -376,7 +377,9 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 Bitmap rotatedBitmap = fixOrientation(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri), stream);
-                this.image = resizeBitmap(rotatedBitmap.copy(rotatedBitmap.getConfig(), true));
+                Bitmap resizedBitmap = resizeBitmap(rotatedBitmap);
+                //System.out.println(resizedBitmap.getWidth() + "x" + resizedBitmap.getHeight());
+                this.image = resizedBitmap.copy(resizedBitmap.getConfig(), true);
                 this.base_image = image.copy(image.getConfig(), true);
                 updateImage();
                 updatePreviews();

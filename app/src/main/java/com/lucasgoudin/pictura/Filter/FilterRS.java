@@ -16,15 +16,16 @@ import androidx.renderscript.RenderScript;
 
 public class FilterRS {
     private FilterName filterName;
+    AppCompatActivity context;
+    RenderScript rs;
 
-    public FilterRS(FilterName filterName) {
+    public FilterRS(FilterName filterName, AppCompatActivity context) {
         this.filterName = filterName;
+        this.context = context;
+        this.rs = RenderScript.create(context);
     }
 
     void apply (Bitmap bmp, AppCompatActivity context) {
-
-        RenderScript rs = RenderScript.create(context);
-
         Allocation input = Allocation.createFromBitmap(rs, bmp);
         Allocation output = Allocation.createTyped(rs, input.getType());
 
@@ -66,9 +67,7 @@ public class FilterRS {
         rs.destroy();
     }
 
-    void apply (Bitmap bmp, AppCompatActivity context, float value) {
-        RenderScript rs = RenderScript.create(context);
-
+    void apply (Bitmap bmp, float value) {
         Allocation input = Allocation.createFromBitmap(rs, bmp);
         Allocation output = Allocation.createTyped(rs, input.getType());
 
@@ -110,4 +109,7 @@ public class FilterRS {
         rs.destroy();
     }
 
+    public AppCompatActivity getContext() {
+        return context;
+    }
 }

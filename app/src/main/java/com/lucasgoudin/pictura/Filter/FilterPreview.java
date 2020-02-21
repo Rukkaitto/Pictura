@@ -11,12 +11,12 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 public class FilterPreview {
     private Bitmap bmp;
     private RoundedBitmapDrawable bmp_d;
-    private AppCompatActivity context;
     private FilterRS filterRS;
+    private AppCompatActivity context;
 
-    public FilterPreview(Bitmap bmp, FilterRS filterRS, AppCompatActivity context) {
-        this.context = context;
+    public FilterPreview(Bitmap bmp, FilterRS filterRS) {
         this.filterRS = filterRS;
+        this.context = filterRS.getContext();
 
         update(bmp);
     }

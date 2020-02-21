@@ -3,7 +3,6 @@ package com.lucasgoudin.pictura.Filter;
 import android.graphics.Bitmap;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 public class Filter {
 
@@ -32,8 +31,8 @@ public class Filter {
         this.seekBarMax = seekBarMax;
     }
 
-    public void apply(Bitmap image, AppCompatActivity context) {
-        filterRS.apply(image, context, seekBarValue);
+    public void apply(Bitmap image) {
+        filterRS.apply(image, seekBarValue);
     }
 
     public TextView getFilterBtn() {
