@@ -2,21 +2,21 @@
     <string name="app_name">Pictura</string>
 
     <!-- Filter names-->
-    <string name="toGray">Noir &amp; Blanc</string>
-    <string name="brightness">Luminosité</string>
-    <string name="contrast">Contraste</string>
-    <string name="improve">Amélioration</string>
-    <string name="tint">Teinte</string>
-    <string name="blur">Flou</string>
-    <string name="isolate">Isoler</string>
+    <string name="toGray">Black &amp; White</string>
+    <string name="brightness">Brightness</string>
+    <string name="contrast">Contrast</string>
+    <string name="improve">Improve</string>
+    <string name="tint">Tint</string>
+    <string name="blur">Blur</string>
+    <string name="isolate">Isolate</string>
 
     <!-- Button icons descriptions-->
-    <string name="save">Sauvegarder</string>
-    <string name="load">Charger une image</string>
-    <string name="camera">Prendre une photo</string>
-    <string name="reset">Réinitialiser</string>
+    <string name="save">Save</string>
+    <string name="load">Load an image</string>
+    <string name="camera">Take a picture</string>
+    <string name="reset">Reset</string>
 
-    <string name="noPhotoMessage"><b>Prenez une photo</b> ou choisissez une photo depuis la <b>galerie</b>.</string>
+    <string name="noPhotoMessage"><b>Take a picture</b> or choose an image from the <b>gallery</b>.</string>
 
 
 </resources>

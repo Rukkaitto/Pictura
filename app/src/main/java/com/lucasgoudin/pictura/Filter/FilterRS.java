@@ -35,9 +35,8 @@ public class FilterRS {
     /**
      * Applies the filter to a bitmap with default values (used for previews)
      * @param bmp the bitmap to apply the filter to
-     * @param context the Activity's context
      */
-    void apply(Bitmap bmp, AppCompatActivity context) {
+    void apply(Bitmap bmp) {
         Allocation input = Allocation.createFromBitmap(rs, bmp);
         Allocation output = Allocation.createTyped(rs, input.getType());
 
