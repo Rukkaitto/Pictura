@@ -16,7 +16,7 @@
     <string name="camera">Prendre une photo</string>
     <string name="reset">Réinitialiser</string>
 
-    <string name="noPhotoMessage"><b>Take a picture</b> or choose a photo from the <b>gallery</b>.</string>
+    <string name="noPhotoMessage"><b>Prenez une photo</b> ou choisissez une photo depuis la <b>galerie</b>.</string>
 
 
 </resources>
