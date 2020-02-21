@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,10 +43,12 @@ public class MainActivity extends AppCompatActivity {
     Bitmap image, base_image;
     ImageButton saveBtn, loadBtn, cameraBtn, resetBtn;
     PhotoView photoView;
+    HorizontalScrollView filterScrollView;
     ArrayList<Filter> filters;
     Filter selectedFilter;
     SeekBar seekBar;
     String currentPhotoPath;
+    TextView noPhotoMessage;
 
     int OPEN_GALLERY = 1;
     int OPEN_CAMERA = 2;
@@ -61,11 +65,16 @@ public class MainActivity extends AppCompatActivity {
         makeFilters();
         updatePreviews();
 
+        filterScrollView = findViewById(R.id.filters);
+        noPhotoMessage = findViewById(R.id.noPhotoMessage);
+        filterScrollView.setVisibility(View.INVISIBLE);
+        photoView.setVisibility(View.INVISIBLE);
+
     }
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.FRANCE).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
@@ -330,7 +339,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-
             try {
                 Bitmap rotatedBitmap = fixOrientation(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri), stream);
                 this.image = rotatedBitmap.copy(rotatedBitmap.getConfig(), true);
@@ -340,6 +348,12 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        if((requestCode == OPEN_GALLERY || requestCode == OPEN_CAMERA) && resultCode == RESULT_OK) {
+            filterScrollView.setVisibility(View.VISIBLE);
+            photoView.setVisibility(View.VISIBLE);
+            noPhotoMessage.setVisibility(View.INVISIBLE);
         }
     }
 
