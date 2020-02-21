@@ -15,7 +15,6 @@ import android.os.Bundle;
 
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -36,8 +35,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.stream.Stream;
 
+/**
+ * The main Activity
+ */
 public class MainActivity extends AppCompatActivity {
 
     Bitmap image, base_image;
@@ -72,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Creates a File reference to where the image file for the photo is saved (taken from the camera)
+     * @return a File
+     * @throws IOException if File.createTempFile fails
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.FRANCE).format(new Date());
@@ -88,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
+    /**
+     * Launches the camera app and creates an intent
+     */
     private void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -111,30 +120,43 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Launches the gallery and creates an intent
+     */
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, OPEN_GALLERY);
     }
 
+    /**
+     * Updates the PhotoView content to be the current image bitmap
+     */
     private void updateImage() {
-        // Updates the photoView content to be the current image bitmap
         photoView.setImageBitmap(image);
     }
 
+    /**
+     * Replaces the image with the base image to reset it
+     */
     private void resetImage() {
-        // Replaces the image with the base image to reset it
         image = base_image.copy(base_image.getConfig(), true);
         updateImage();
     }
 
+    /**
+     * Generates the previews and sets it to their respective compound drawables
+     */
     private void updatePreviews() {
-        // For each filter, update the preview
+        // For each filter, makeRoundedPreview the preview
         for(Filter f : filters) {
-            f.getFilterPreview().update(image);
+            f.getFilterPreview().makeRoundedPreview(image);
             f.getFilterBtn().setCompoundDrawablesRelativeWithIntrinsicBounds(null, f.getFilterPreview().getPreview(), null, null);
         }
     }
 
+    /**
+     * Initializes the PhotoView with a default image
+     */
     private void initializePhotoView() {
         // Creates the photoview and sets the default image
         photoView = findViewById(R.id.photo_view);
@@ -143,8 +165,10 @@ public class MainActivity extends AppCompatActivity {
         updateImage();
     }
 
+    /**
+     * Sets the buttons' on click functionality (save, load, and reset)
+     */
     private void initializeButtons() {
-        // Sets the buttons' on click functionality (save, load, and reset)
         saveBtn = findViewById(R.id.saveBtn);
         loadBtn = findViewById(R.id.loadBtn);
         cameraBtn = findViewById(R.id.cameraBtn);
@@ -181,11 +205,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Takes a value in an interval and interpolates it to another interval ; useful for the seekbar logic
+    /**
+     * Takes a value in an interval and interpolates it to another interval ; useful for the seekbar logic
+     * @param x the value to interpolate
+     * @param minA the minimum of the first interval
+     * @param maxA the maximum of the first interval
+     * @param minB the minimum of the second interval
+     * @param maxB the maximum of the second interval
+     * @return the interpolated value
+     */
     private float map(float x, float minA, float maxA, float minB, float maxB) {
         return ((x - minA) / maxA) * (maxB - minB) + minB;
     }
 
+    /**
+     * Initializes the seekbar
+     */
     private void initializeSeekBar() {
         seekBar = findViewById(R.id.seekBar);
 
@@ -211,6 +246,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Resets the seekBar to its default value
+     */
     private void resetSeekBar() {
         // Ensures the app doesn't crash when no photo is chosen
         if(selectedFilter != null) {
@@ -223,6 +261,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates the filters, with their invividual seekbar limits and their associated buttons
+     */
     private void makeFilters() {
         // Filter buttons
         TextView toGrayBtn = findViewById(R.id.toGrayBtn);
@@ -280,7 +321,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Gets the exif data from the bitmap and rotates the image with a matrix depending on the photo's orientation
+    /**
+     * Gets the exif data from the bitmap and rotates the image with a matrix depending on the photo's orientation
+     * @param bmp the bitmap to retreive the exif data from
+     * @param stream the stream corresponding to the photo's file
+     * @return the rotated bitmap
+     */
     private Bitmap fixOrientation(Bitmap bmp, InputStream stream) {
         ExifInterface exif = null;
         try {
@@ -328,6 +374,11 @@ public class MainActivity extends AppCompatActivity {
         return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
     }
 
+    /**
+     * Downscales the bitmap to save resources
+     * @param bmp the bitmap to downscale
+     * @return the downscaled bitmap
+     */
     private Bitmap resizeBitmap(Bitmap bmp) {
         // Gets the dimensions of the PhotoView
         float targetW = photoView.getWidth();
@@ -343,46 +394,38 @@ public class MainActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(bmp, (int)(photoW / scaleFactor), (int)(photoH / scaleFactor), true);
     }
 
+    /**
+     * Processes the picture, taken either from the gallery or the camera and sets it on the PhotoView
+     * @param imageUri the Uri of the picture
+     * @param bmp the bitmap of the picture
+     */
+    private void handlePhoto(Uri imageUri, Bitmap bmp) {
+        InputStream stream = null;
+        try {
+            stream = getContentResolver().openInputStream(imageUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap rotatedBitmap = fixOrientation(bmp, stream);
+        Bitmap resizedBitmap = resizeBitmap(rotatedBitmap);
+        this.image = resizedBitmap.copy(rotatedBitmap.getConfig(), true);
+        this.base_image = image.copy(image.getConfig(), true);
+        updateImage();
+        updatePreviews();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == OPEN_CAMERA && resultCode == RESULT_OK){
-            Uri imageUri = Uri.fromFile(new File(currentPhotoPath));
-
-            InputStream stream = null;
-            try {
-                stream = getContentResolver().openInputStream(imageUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            Bitmap rotatedBitmap = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath), stream);
-            Bitmap resizedBitmap = resizeBitmap(rotatedBitmap);
-            this.image = resizedBitmap.copy(rotatedBitmap.getConfig(), true);
-            this.base_image = image.copy(image.getConfig(), true);
-            updateImage();
-            updatePreviews();
+            handlePhoto(Uri.fromFile(new File(currentPhotoPath)), BitmapFactory.decodeFile(currentPhotoPath));
         }
 
         if(requestCode == OPEN_GALLERY && resultCode == RESULT_OK && data != null && data.getData() != null ) {
-
-            Uri imageUri = data.getData();
-            InputStream stream = null;
             try {
-                stream = getContentResolver().openInputStream(imageUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                Bitmap rotatedBitmap = fixOrientation(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri), stream);
-                Bitmap resizedBitmap = resizeBitmap(rotatedBitmap);
-                //System.out.println(resizedBitmap.getWidth() + "x" + resizedBitmap.getHeight());
-                this.image = resizedBitmap.copy(resizedBitmap.getConfig(), true);
-                this.base_image = image.copy(image.getConfig(), true);
-                updateImage();
-                updatePreviews();
+                handlePhoto(data.getData(), MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()));
             } catch (IOException e) {
                 e.printStackTrace();
             }

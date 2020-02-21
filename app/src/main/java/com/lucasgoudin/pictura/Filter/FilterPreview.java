@@ -8,19 +8,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
+/**
+ * A class for the filters' previews
+ */
 public class FilterPreview {
     private Bitmap bmp;
     private RoundedBitmapDrawable bmp_d;
     private FilterRS filterRS;
     private AppCompatActivity context;
 
+    /**
+     * Creates a preview and associates its Renderscript filter
+     * @param bmp the bitmap that will be used to generate the preview
+     * @param filterRS a Renderscript filter
+     */
     public FilterPreview(Bitmap bmp, FilterRS filterRS) {
         this.filterRS = filterRS;
         this.context = filterRS.getContext();
 
-        update(bmp);
+        makeRoundedPreview(bmp);
     }
 
+    /**
+     * Scales the bitmap to the preview's dimensions
+     * @param image the image to scale
+     * @return the scaled bitmap
+     */
     private Bitmap scaleBitmap(Bitmap image) {
         Bitmap result;
         int dimension, imageWidth, imageHeight;
@@ -42,21 +55,34 @@ public class FilterPreview {
         return Bitmap.createScaledBitmap(result, (int) (Settings.PREVIEW_SIZE * density), (int) (Settings.PREVIEW_SIZE * density), true);
     }
 
+    /**
+     * Applies the Renderscript filter to the preview image
+     */
     private void applyFilter() {
         filterRS.apply(bmp, context);
     }
 
-    public void update(Bitmap image) {
+    /**
+     * Creates a rounded version of the preview and applies the filter to it
+     * @param image the original square preview
+     */
+    public void makeRoundedPreview(Bitmap image) {
         this.bmp = scaleBitmap(image);
         applyFilter();
         bmp_d = RoundedBitmapDrawableFactory.create(context.getResources(), this.bmp);
         bmp_d.setCornerRadius(Settings.CORNER_RADIUS);
     }
 
+    /**
+     * @return the rounded and filtered preview
+     */
     public RoundedBitmapDrawable getPreview() {
         return bmp_d;
     }
 
+    /**
+     * @return the Renderscript filter
+     */
     FilterRS getFilterRS() {
         return filterRS;
     }
