@@ -2,6 +2,7 @@ package com.lucasgoudin.pictura;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
@@ -24,8 +26,11 @@ import com.lucasgoudin.pictura.Filter.FilterName;
 import com.lucasgoudin.pictura.Filter.FilterRS;
 import com.lucasgoudin.pictura.Filter.FilterPreview;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Filter> filters;
     Filter selectedFilter;
     SeekBar seekBar;
+    String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +56,42 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
     private void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, 1);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.lucasgoudin.pictura.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 2);
+            }
         }
     }
 
@@ -147,10 +185,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetSeekBar() {
-        if(selectedFilter.getSeekBarMin() < 0) {
-            seekBar.setProgress(seekBar.getMax() / 2);
-        } else {
-            seekBar.setProgress(0);
+        try {
+            if (selectedFilter.getSeekBarMin() < 0) {
+                seekBar.setProgress(seekBar.getMax() / 2);
+            } else {
+                seekBar.setProgress(0);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 
@@ -205,40 +247,73 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private Bitmap fixOrientation(Bitmap bmp, String filename) {
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int orientation = 0;
+        if(exif != null) {
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+        }
+
+        Matrix matrix = new Matrix();
+
+        switch (orientation) {
+            case 2:
+                matrix.setScale(-1, 1);
+                break;
+            case 3:
+                matrix.setRotate(180);
+                break;
+            case 4:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case 5:
+                matrix.setRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case 6:
+                matrix.setRotate(90);
+                break;
+            case 7:
+                matrix.setRotate(-90);
+                matrix.postScale(-1, 1);
+                break;
+            case 8:
+                matrix.setRotate(-90);
+                break;
+            default:
+                break;
+        }
+
+        return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
-            Bundle extras = data.getExtras();
-            this.image = (Bitmap) extras.get("data");
-            this.base_image = this.image;
+        if(requestCode == 2 && resultCode == RESULT_OK){
+
+            Bitmap rotatedBitmap = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath), currentPhotoPath);
+            this.image = rotatedBitmap.copy(rotatedBitmap.getConfig(), true);
+            this.base_image = image.copy(image.getConfig(), true);
             updateImage();
             updatePreviews();
         }
 
-        if(requestCode == RESULT_FIRST_USER && resultCode == RESULT_OK && data != null && data.getData() != null ) {
+        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null ) {
 
             Uri imageUri = data.getData();
             String filename = data.getDataString();
-            ExifInterface exif = null;
-            try {
-                exif = new ExifInterface(filename);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            int orientation = 0;
-            if(exif != null) {
-                orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-            }
-
-            Matrix matrix = new Matrix();
-            matrix.postRotate(orientation);
 
             try {
-                Bitmap sourceBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                Bitmap rotatedBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight(), matrix, true);
+                Bitmap rotatedBitmap = fixOrientation(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri), filename);
                 this.image = rotatedBitmap.copy(rotatedBitmap.getConfig(), true);
                 this.base_image = image.copy(image.getConfig(), true);
                 updateImage();
@@ -246,19 +321,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
-            /*
-            try {
-                this.image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                this.base_image = image.copy(image.getConfig(), true);
-                updateImage();
-                updatePreviews();
-            } catch (Exception e) {
-                System.out.println("File not found!");
-            }
-
-             */
         }
     }
 
