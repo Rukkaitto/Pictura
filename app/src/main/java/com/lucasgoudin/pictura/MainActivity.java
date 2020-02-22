@@ -132,22 +132,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void save() {
-        // Creates a file for the picture
+
         File photoFile = null;
         try {
             photoFile = createImageFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(photoFile != null) {
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 
-            Uri contentUri = Uri.fromFile(photoFile);
-            mediaScanIntent.setData(contentUri);
-            this.sendBroadcast(mediaScanIntent);
+        // Creates a file for the picture
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 
-            Toast.makeText(getApplicationContext(),"Enregistrée", Toast.LENGTH_LONG).show();
-        }
+        Uri contentUri = Uri.fromFile(photoFile);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+
+        Toast.makeText(getApplicationContext(),"Enregistrée", Toast.LENGTH_LONG).show();
+
     }
 
     /**
