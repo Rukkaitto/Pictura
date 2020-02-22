@@ -20,6 +20,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.lucasgoudin.pictura.Filter.Filter;
@@ -128,6 +129,25 @@ public class MainActivity extends AppCompatActivity {
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, OPEN_GALLERY);
+    }
+
+    private void save() {
+        // Creates a file for the picture
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(photoFile != null) {
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+
+            Uri contentUri = Uri.fromFile(photoFile);
+            mediaScanIntent.setData(contentUri);
+            this.sendBroadcast(mediaScanIntent);
+
+            Toast.makeText(getApplicationContext(),"Enregistrée", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -241,6 +261,13 @@ public class MainActivity extends AppCompatActivity {
                 for(Filter f : filters) {
                     f.getFilterBtn().setTextColor(Color.parseColor("#C5C5C5"));
                 }
+            }
+        });
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save();
             }
         });
 
