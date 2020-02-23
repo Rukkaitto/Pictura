@@ -1,5 +1,6 @@
 package com.lucasgoudin.pictura;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -7,6 +8,7 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -138,41 +140,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void save() {
-
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "Litrato" + "/";
-
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, SAVE_IMAGE);
-
-        try {
-            File dir = new File(path);
-            if(!dir.exists()){
-                dir.mkdirs();
-            }
-
-            OutputStream out;
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-            File photoFile = new File(path, timeStamp + ".jpg");
-            photoFile.createNewFile();
-
-            out = new FileOutputStream(photoFile);
-
-            selectedFilter.apply(full_image);
-            full_image.compress(Bitmap.CompressFormat.JPEG, 90, out);
-
-            MediaStore.Images.Media.insertImage(MainActivity.this.getContentResolver(),photoFile.getAbsolutePath(), photoFile.getName(), photoFile.getName());
-
-            out.flush();
-            out.close();
-
-            Toast.makeText(getApplicationContext(),"Enregistrée", Toast.LENGTH_LONG).show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
     }
 
     /**
@@ -545,7 +513,44 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == SAVE_IMAGE) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                try {
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + R.string.app_name + "/";
+                    File dir = new File(path);
+                    if(!dir.exists()){
+                        dir.mkdirs();
+                    }
 
+                    OutputStream out;
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
+                    File photoFile = new File(path, timeStamp + ".jpg");
+                    photoFile.createNewFile();
+
+                    out = new FileOutputStream(photoFile);
+
+                    Bitmap full_image_result = full_image.copy(full_image.getConfig(), true);
+                    selectedFilter.apply(full_image_result);
+                    full_image_result.compress(Bitmap.CompressFormat.JPEG, 90, out);
+
+                    MediaStore.Images.Media.insertImage(MainActivity.this.getContentResolver(),photoFile.getAbsolutePath(), photoFile.getName(), photoFile.getName());
+
+                    out.flush();
+                    out.close();
+
+                    Toast.makeText(getApplicationContext(),R.string.savedMessage, Toast.LENGTH_LONG).show();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.noPermissions, Toast.LENGTH_LONG).show();
+            }
+            return;
+        }
+    }
 }
 

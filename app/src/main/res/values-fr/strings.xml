@@ -14,4 +14,6 @@
     <string name="tint">Teinte</string>
     <string name="toGray">Noir &amp; Blanc</string>
     <string name="share">Partager</string>
+    <string name="noPermissions">Permission refusée, impossible de sauvegarder l\'image</string>
+    <string name="savedMessage">Enregistrée</string>
 </resources>

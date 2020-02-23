@@ -19,5 +19,8 @@
 
     <string name="noPhotoMessage"><b>Take a picture</b> or choose an image from the <b>gallery</b>.</string>
 
+    <string name="savedMessage">Saved</string>
+    <string name="noPermissions">Permission denied, unable to save image</string>
+
 
 </resources>
