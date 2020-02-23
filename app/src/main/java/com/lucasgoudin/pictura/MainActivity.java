@@ -2,13 +2,16 @@ package com.lucasgoudin.pictura;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.icu.util.Output;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,10 +37,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * The main Activity
@@ -56,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     int OPEN_GALLERY = 1;
     int OPEN_CAMERA = 2;
+    int SAVE_IMAGE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,21 +139,39 @@ public class MainActivity extends AppCompatActivity {
 
     private void save() {
 
-        File photoFile = null;
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "Litrato" + "/";
+
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, SAVE_IMAGE);
+
         try {
-            photoFile = createImageFile();
+            File dir = new File(path);
+            if(!dir.exists()){
+                dir.mkdirs();
+            }
+
+            OutputStream out;
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+            File photoFile = new File(path, timeStamp + ".jpg");
+            photoFile.createNewFile();
+
+            out = new FileOutputStream(photoFile);
+
+            selectedFilter.apply(full_image);
+            full_image.compress(Bitmap.CompressFormat.JPEG, 90, out);
+
+            MediaStore.Images.Media.insertImage(MainActivity.this.getContentResolver(),photoFile.getAbsolutePath(), photoFile.getName(), photoFile.getName());
+
+            out.flush();
+            out.close();
+
+            Toast.makeText(getApplicationContext(),"Enregistrée", Toast.LENGTH_LONG).show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Creates a file for the picture
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 
-        Uri contentUri = Uri.fromFile(photoFile);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-
-        Toast.makeText(getApplicationContext(),"Enregistrée", Toast.LENGTH_LONG).show();
 
     }
 
