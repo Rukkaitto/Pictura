@@ -526,13 +526,12 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == SAVE_IMAGE) {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 try {
-                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictura/";
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + getResources().getString(R.string.app_name) + File.separator;
                     System.out.println(path);
                     File dir = new File(path);
                     if(!dir.exists()){
                         dir.mkdirs();
                     }
-
                     OutputStream out;
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
