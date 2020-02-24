@@ -21,6 +21,8 @@
 
     <string name="savedMessage">Saved</string>
     <string name="noPermissions">Permission denied, unable to save image</string>
+    <string name="saveNoFilter">Please apply a filter before saving</string>
+    <string name="shareNoFilter">Please apply a filter before sharing</string>
 
 
 </resources>

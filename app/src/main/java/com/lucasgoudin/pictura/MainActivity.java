@@ -241,6 +241,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(selectedFilter != null) {
                     share();
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.shareNoFilter, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -266,6 +268,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(selectedFilter != null) {
                     save();
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.saveNoFilter, Toast.LENGTH_LONG).show();
                 }
             }
         });

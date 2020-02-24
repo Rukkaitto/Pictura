@@ -16,4 +16,6 @@
     <string name="share">Partager</string>
     <string name="noPermissions">Permission refusée, impossible de sauvegarder l\'image</string>
     <string name="savedMessage">Enregistrée</string>
+    <string name="saveNoFilter">Veuillez appliquer un filtre avant de sauvegarder</string>
+    <string name="shareNoFilter">Veuillez appliquer un filtre avant de partager</string>
 </resources>
