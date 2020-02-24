@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.icu.util.Output;
 import android.media.ExifInterface;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -525,7 +526,8 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == SAVE_IMAGE) {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 try {
-                    String path = Environment.getExternalStorageDirectory() + File.separator + R.string.app_name;
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictura/";
+                    System.out.println(path);
                     File dir = new File(path);
                     if(!dir.exists()){
                         dir.mkdirs();
@@ -543,18 +545,10 @@ public class MainActivity extends AppCompatActivity {
                     selectedFilter.apply(full_image_result);
                     full_image_result.compress(Bitmap.CompressFormat.JPEG, 90, out);
 
-                    ContentValues values = new ContentValues();
-                    values.put(MediaStore.Images.Media.TITLE, timeStamp);
-                    values.put(MediaStore.Images.Media.DISPLAY_NAME, timeStamp);
-                    values.put(MediaStore.Images.Media.DESCRIPTION, "");
-                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
-                    values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
-                    values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-                    values.put(MediaStore.Images.Media.DATA, photoFile.getAbsolutePath());
-                    MainActivity.this.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
                     out.flush();
                     out.close();
+
+                    MediaScannerConnection.scanFile(this, new String[]{photoFile.getAbsolutePath()}, new String[]{"image/jpg"}, null);
 
                     Toast.makeText(getApplicationContext(),R.string.savedMessage, Toast.LENGTH_LONG).show();
 
