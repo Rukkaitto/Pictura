@@ -7,8 +7,12 @@
     <string name="contrast">Contrast</string>
     <string name="improve">Improve</string>
     <string name="tint">Tint</string>
-    <string name="blur">Blur</string>
+    <string name="blur">Gaussian Blur</string>
     <string name="isolate">Isolate</string>
+    <string name="average">Average</string>
+    <string name="laplace">Laplace</string>
+    <string name="sobel">Sobel</string>
+
 
     <!-- Button icons descriptions-->
     <string name="save">Save</string>

@@ -272,6 +272,57 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size" />
 
+            <TextView
+                android:id="@+id/laplaceBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableTop="@mipmap/ic_launcher"
+                android:drawablePadding="@dimen/text_padding"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/icons_padding"
+                android:paddingRight="@dimen/icons_padding"
+                android:text="@string/laplace"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size" />
+
+            <TextView
+                android:id="@+id/sobelBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableTop="@mipmap/ic_launcher"
+                android:drawablePadding="@dimen/text_padding"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/icons_padding"
+                android:paddingRight="@dimen/icons_padding"
+                android:text="@string/sobel"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size" />
+
+            <TextView
+                android:id="@+id/averageBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableTop="@mipmap/ic_launcher"
+                android:drawablePadding="@dimen/text_padding"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/icons_padding"
+                android:paddingRight="@dimen/icons_padding"
+                android:text="@string/average"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size" />
+
 
         </LinearLayout>
     </HorizontalScrollView>

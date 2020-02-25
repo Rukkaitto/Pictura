@@ -145,7 +145,6 @@ public class FilterRS {
                 contrastScript.forEach_contrast(input, output);
                 contrastScript.destroy();
                 break;
-
             case IMPROVE:
                 float[] histcumul = new float[256];
                 histcumul = createHist(bmp);

@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
         filterScrollView = findViewById(R.id.filters);
         noPhotoMessage = findViewById(R.id.noPhotoMessage);
-        //filterScrollView.setVisibility(View.INVISIBLE);
-        //photoView.setVisibility(View.INVISIBLE);
+        filterScrollView.setVisibility(View.INVISIBLE);
+        photoView.setVisibility(View.INVISIBLE);
 
     }
 
@@ -357,6 +357,9 @@ public class MainActivity extends AppCompatActivity {
         TextView tintBtn = findViewById(R.id.tintBtn);
         TextView isolateBtn = findViewById(R.id.isolateBtn);
         TextView blurBtn = findViewById(R.id.blurBtn);
+        TextView laplaceBtn = findViewById(R.id.laplaceBtn);
+        TextView sobelBtn = findViewById(R.id.sobelBtn);
+        TextView averageBtn = findViewById(R.id.averageBtn);
 
         // Filters
         Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY, this)));
@@ -365,7 +368,10 @@ public class MainActivity extends AppCompatActivity {
         Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE, this)));
         Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT, this)), 0, 359);
         Filter isolate = new Filter(isolateBtn, new FilterPreview(image, new FilterRS(FilterName.ISOLATE, this)), 0, 359);
-        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR, this)), 0, 1);
+        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR, this)), 3, 7);
+        Filter laplace = new Filter(laplaceBtn, new FilterPreview(image, new FilterRS(FilterName.LAPLACE, this)));
+        Filter sobel = new Filter(sobelBtn, new FilterPreview(image, new FilterRS(FilterName.SOBEL, this)));
+        Filter average = new Filter(averageBtn, new FilterPreview(image, new FilterRS(FilterName.AVERAGE, this)), 3, 7);
 
         // Adds all the filters to the list
         filters = new ArrayList<>();
@@ -376,6 +382,9 @@ public class MainActivity extends AppCompatActivity {
         filters.add(isolate);
         filters.add(tint);
         filters.add(blur);
+        filters.add(laplace);
+        filters.add(sobel);
+        filters.add(average);
 
         for(final Filter filter : filters) {
             final TextView filterBtn = filter.getFilterBtn();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pictura</string>
-    <string name="blur">Flou</string>
+    <string name="blur">Flou Gaussien</string>
     <string name="brightness">Luminosité</string>
     <string name="camera">Prendre une photo</string>
     <string name="contrast">Contraste</string>
@@ -18,4 +18,7 @@
     <string name="savedMessage">Enregistrée</string>
     <string name="saveNoFilter">Veuillez appliquer un filtre avant de sauvegarder</string>
     <string name="shareNoFilter">Veuillez appliquer un filtre avant de partager</string>
+    <string name="sobel">Sobel</string>
+    <string name="laplace">Laplace</string>
+    <string name="average">Moyenneur</string>
 </resources>

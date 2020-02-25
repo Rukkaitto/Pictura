@@ -11,4 +11,7 @@ public enum FilterName {
     TINT,
     ISOLATE,
     BLUR,
+    LAPLACE,
+    SOBEL,
+    AVERAGE
 }
