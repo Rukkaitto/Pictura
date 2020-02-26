@@ -52,7 +52,7 @@ public class FilterRS {
                 break;
             case BRIGHTNESS:
                 ScriptC_brightness brightnessScript = new ScriptC_brightness(rs);
-                brightnessScript.set_value(0.001f);
+                brightnessScript.invoke_setBright(150.f);
                 brightnessScript.forEach_brightness(input, output);
                 brightnessScript.destroy();
                 break;
@@ -119,7 +119,7 @@ public class FilterRS {
                 break;
             case BRIGHTNESS:
                 ScriptC_brightness brightnessScript = new ScriptC_brightness(rs);
-                brightnessScript.set_value(value);
+                brightnessScript.invoke_setBright(value);
                 brightnessScript.forEach_brightness(input, output);
                 brightnessScript.destroy();
                 break;
