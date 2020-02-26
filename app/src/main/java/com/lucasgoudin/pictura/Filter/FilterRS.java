@@ -88,6 +88,19 @@ public class FilterRS {
                 improveScript.forEach_improve(input, output);
                 improveScript.destroy();
                 break;
+            case BLUR:
+                Convolution.ApplyConvolution(bmp, CreateMask.gaussien(5), 5); //size -> variable
+                break;
+            case AVERAGE:
+                Convolution.ApplyConvolution(bmp, CreateMask.averaging(5), 5); //size -> variable
+                break;
+            case SOBEL:
+                Convolution.ApplyConvolution(bmp, CreateMask.sobelX(), 3); //size -> do not modify
+                Convolution.ApplyConvolution(bmp, CreateMask.sobelY(), 3); //size -> do not modify
+                break;
+            case LAPLACE:
+                Convolution.ApplyConvolution(bmp, CreateMask.laplace(), 3); //size -> do not modify
+                break;
                 //TODO: égalisation (avec valeurs par défaut pour les previews)
                 //TODO: extension (avec valeurs par défaut pour les previews)
                 //TODO: convolution (avec valeurs par défaut pour les previews)

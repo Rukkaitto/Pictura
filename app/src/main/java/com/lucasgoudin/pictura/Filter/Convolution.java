@@ -51,6 +51,9 @@ public class Convolution {
                         cptF++;
                     }
                 }
+                if(totalF == 0){    //Laplace + Sobel
+                    totalF = 1;
+                }
                 r /= totalF;
                 g /= totalF;
                 b /= totalF;
