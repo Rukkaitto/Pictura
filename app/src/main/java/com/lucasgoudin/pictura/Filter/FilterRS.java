@@ -49,24 +49,28 @@ public class FilterRS {
                 ScriptC_gray grayScript = new ScriptC_gray(rs);
                 grayScript.forEach_toGray(input, output);
                 grayScript.destroy();
+                output.copyTo(bmp);
                 break;
             case BRIGHTNESS:
                 ScriptC_brightness brightnessScript = new ScriptC_brightness(rs);
                 brightnessScript.invoke_setBright(150.f);
                 brightnessScript.forEach_brightness(input, output);
                 brightnessScript.destroy();
+                output.copyTo(bmp);
                 break;
             case TINT:
                 ScriptC_tint tintScript = new ScriptC_tint(rs);
                 tintScript.set_hue(new Random().nextFloat() * 359);
                 tintScript.forEach_tint(input, output);
                 tintScript.destroy();
+                output.copyTo(bmp);
                 break;
             case ISOLATE:
                 ScriptC_isolate isolateScript = new ScriptC_isolate(rs);
                 isolateScript.set_hue(0.0f);
                 isolateScript.forEach_isolate(input, output);
                 isolateScript.destroy();
+                output.copyTo(bmp);
                 break;
             case CONTRAST:
                 float[] LUT = new float[256];
@@ -77,6 +81,7 @@ public class FilterRS {
                 contrastScript.bind_LUT(LUT_alloc);
                 contrastScript.forEach_contrast(input, output);
                 contrastScript.destroy();
+                output.copyTo(bmp);
                 break;
             case IMPROVE:
                 float[] histcumul = new float[256];
@@ -87,28 +92,28 @@ public class FilterRS {
                 improveScript.bind_hist_cumul(hist_alloc);
                 improveScript.forEach_improve(input, output);
                 improveScript.destroy();
+                output.copyTo(bmp);
                 break;
             case BLUR:
                 Convolution.ApplyConvolution(bmp, CreateMask.gaussien(5), 5); //size -> variable
                 break;
-            case AVERAGE:
-                Convolution.ApplyConvolution(bmp, CreateMask.averaging(5), 5); //size -> variable
-                break;
-            case SOBEL:
-                Convolution.ApplyConvolution(bmp, CreateMask.sobelX(), 3); //size -> do not modify
-                Convolution.ApplyConvolution(bmp, CreateMask.sobelY(), 3); //size -> do not modify
-                break;
             case LAPLACE:
                 Convolution.ApplyConvolution(bmp, CreateMask.laplace(), 3); //size -> do not modify
                 break;
+            case SOBEL:
+                Convolution.ApplyConvolution(bmp, CreateMask.sobelX(), 3);
+                Convolution.ApplyConvolution(bmp, CreateMask.sobelY(), 3);
+                break;
+            case AVERAGE:
+                Convolution.ApplyConvolution(bmp, CreateMask.averaging(5), 5); //size -> variable
+                break;
                 //TODO: égalisation (avec valeurs par défaut pour les previews)
                 //TODO: extension (avec valeurs par défaut pour les previews)
-                //TODO: convolution (avec valeurs par défaut pour les previews)
             default:
                 return;
         }
 
-        output.copyTo(bmp);
+
 
         input.destroy();
         output.destroy();
@@ -129,24 +134,28 @@ public class FilterRS {
                 ScriptC_gray grayScript = new ScriptC_gray(rs);
                 grayScript.forEach_toGray(input, output);
                 grayScript.destroy();
+                output.copyTo(bmp);
                 break;
             case BRIGHTNESS:
                 ScriptC_brightness brightnessScript = new ScriptC_brightness(rs);
                 brightnessScript.invoke_setBright(value);
                 brightnessScript.forEach_brightness(input, output);
                 brightnessScript.destroy();
+                output.copyTo(bmp);
                 break;
             case TINT:
                 ScriptC_tint tintScript = new ScriptC_tint(rs);
                 tintScript.set_hue(value);
                 tintScript.forEach_tint(input, output);
                 tintScript.destroy();
+                output.copyTo(bmp);
                 break;
             case ISOLATE:
                 ScriptC_isolate isolateScript = new ScriptC_isolate(rs);
                 isolateScript.set_hue(value);
                 isolateScript.forEach_isolate(input, output);
                 isolateScript.destroy();
+                output.copyTo(bmp);
                 break;
             case CONTRAST:
                 float[] LUT = new float[256];
@@ -157,6 +166,7 @@ public class FilterRS {
                 contrastScript.bind_LUT(LUT_alloc);
                 contrastScript.forEach_contrast(input, output);
                 contrastScript.destroy();
+                output.copyTo(bmp);
                 break;
             case IMPROVE:
                 float[] histcumul = new float[256];
@@ -167,6 +177,20 @@ public class FilterRS {
                 improveScript.bind_hist_cumul(hist_alloc);
                 improveScript.forEach_improve(input, output);
                 improveScript.destroy();
+                output.copyTo(bmp);
+                break;
+            case BLUR:
+                Convolution.ApplyConvolution(bmp, CreateMask.gaussien((int)value), 5);
+                break;
+            case LAPLACE:
+                Convolution.ApplyConvolution(bmp, CreateMask.laplace(), 3);
+                break;
+            case SOBEL:
+                Convolution.ApplyConvolution(bmp, CreateMask.sobelX(), 3);
+                Convolution.ApplyConvolution(bmp, CreateMask.sobelY(), 3);
+                break;
+            case AVERAGE:
+                Convolution.ApplyConvolution(bmp, CreateMask.averaging((int)value), 5);
                 break;
                 //TODO: égalisation
                 //TODO: extension
@@ -175,7 +199,7 @@ public class FilterRS {
                 return;
         }
 
-        output.copyTo(bmp);
+
 
         input.destroy();
         output.destroy();

@@ -340,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
             if (selectedFilter.getSeekBarMin() < 0) {
                 seekBar.setProgress(seekBar.getMax() / 2);
             } else {
-                seekBar.setProgress(0);
+                seekBar.setProgress((int)selectedFilter.getSeekBarMin());
             }
         }
     }
@@ -363,15 +363,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Filters
         Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY, this)));
-        Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS, this)), -255.f, 255.f);
+        Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS, this)), -255.f, 254.f);
         Filter contrast = new Filter(contrastBtn, new FilterPreview(image, new FilterRS(FilterName.CONTRAST, this)));
         Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE, this)));
         Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT, this)), 0, 359);
         Filter isolate = new Filter(isolateBtn, new FilterPreview(image, new FilterRS(FilterName.ISOLATE, this)), 0, 359);
-        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR, this)), 3, 7);
+        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR, this)), 5, 8);
         Filter laplace = new Filter(laplaceBtn, new FilterPreview(image, new FilterRS(FilterName.LAPLACE, this)));
         Filter sobel = new Filter(sobelBtn, new FilterPreview(image, new FilterRS(FilterName.SOBEL, this)));
-        Filter average = new Filter(averageBtn, new FilterPreview(image, new FilterRS(FilterName.AVERAGE, this)), 3, 7);
+        Filter average = new Filter(averageBtn, new FilterPreview(image, new FilterRS(FilterName.AVERAGE, this)), 5, 8);
 
         // Adds all the filters to the list
         filters = new ArrayList<>();
