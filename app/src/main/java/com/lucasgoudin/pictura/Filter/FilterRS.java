@@ -3,10 +3,11 @@ package com.lucasgoudin.pictura.Filter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import com.lucasgoudin.pictura.ScriptC_Convolution;
 import com.lucasgoudin.pictura.ScriptC_brightness;
-import com.lucasgoudin.pictura.ScriptC_convolve;
 import com.lucasgoudin.pictura.ScriptC_gray;
 import com.lucasgoudin.pictura.ScriptC_isolate;
+import com.lucasgoudin.pictura.ScriptC_sobel;
 import com.lucasgoudin.pictura.ScriptC_tint;
 import com.lucasgoudin.pictura.ScriptC_contrast;
 import com.lucasgoudin.pictura.ScriptC_improve;
@@ -94,36 +95,84 @@ public class FilterRS {
                 break;
             case BLUR:
                 int filterSize = 25;
+                ScriptC_Convolution scriptC_gaussian = new ScriptC_Convolution(rs);
 
-                ScriptC_convolve scriptC_convolve = new ScriptC_convolve(rs);
-
-                scriptC_convolve.set_gIn(input);
-                scriptC_convolve.set_gWidth(width);
-                scriptC_convolve.set_gHeight(height);
-                scriptC_convolve.set_gKernelSize(filterSize);
+                scriptC_gaussian.set_gIn(input);
+                scriptC_gaussian.set_gWidth(width);
+                scriptC_gaussian.set_gHeight(height);
+                scriptC_gaussian.set_gKernelSize(filterSize);
 
                 float[] coeffs = gaussianMatrix(filterSize, filterSize);
                 Allocation coeffs_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
                 coeffs_alloc.copyFrom(coeffs);
 
-                scriptC_convolve.set_gCoeffs(coeffs_alloc);
+                scriptC_gaussian.set_gCoeffs(coeffs_alloc);
 
-                scriptC_convolve.forEach_root(output);
-                scriptC_convolve.destroy();
+                scriptC_gaussian.forEach_root(output);
+                scriptC_gaussian.destroy();
                 output.copyTo(bmp);
                 break;
             case LAPLACE:
-                Convolution.ApplyConvolution(bmp, CreateMask.laplace(), 3); //size -> do not modify
+                filterSize = 3;
+                ScriptC_Convolution scriptC_laplace = new ScriptC_Convolution(rs);
+
+                scriptC_laplace.set_gIn(input);
+                scriptC_laplace.set_gWidth(width);
+                scriptC_laplace.set_gHeight(height);
+                scriptC_laplace.set_gKernelSize(filterSize);
+
+                float[] coeffs_laplace = {-1,-1,-1,-1,8,-1,-1,-1,-1};
+                Allocation coeffs__laplace_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
+                coeffs__laplace_alloc.copyFrom(coeffs_laplace);
+
+                scriptC_laplace.set_gCoeffs(coeffs__laplace_alloc);
+
+                scriptC_laplace.forEach_root(output);
+                scriptC_laplace.destroy();
+                output.copyTo(bmp);
                 break;
             case SOBEL:
-                Convolution.ApplyConvolution(bmp, CreateMask.sobelX(), 3);
-                Convolution.ApplyConvolution(bmp, CreateMask.sobelY(), 3);
+                filterSize = 3;
+                ScriptC_sobel scriptC_sobel = new ScriptC_sobel(rs);
+
+                scriptC_sobel.set_gIn(input);
+                scriptC_sobel.set_gWidth(width);
+                scriptC_sobel.set_gHeight(height);
+                scriptC_sobel.set_gKernelSize(filterSize);
+
+                float[] coeffs_sobel_x = {-1,0,1,-2,0,2,-1,0,1};
+                float[] coeffs_sobel_y = {-1,-2,-1,0,0,0,1,2,1};
+                Allocation sobelKernelX = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
+                Allocation sobelKernelY = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
+                sobelKernelX.copyFrom(coeffs_sobel_x);
+                sobelKernelY.copyFrom(coeffs_sobel_y);
+
+                scriptC_sobel.set_gCoeffsX(sobelKernelX);
+                scriptC_sobel.set_gCoeffsY(sobelKernelY);
+                scriptC_sobel.forEach_root(output);
+
+                scriptC_sobel.destroy();
+                output.copyTo(bmp);
                 break;
             case AVERAGE:
-                Convolution.ApplyConvolution(bmp, CreateMask.averaging(5), 5); //size -> variable
+                int filterSizeAverage = 5;
+                ScriptC_Convolution scriptC_average = new ScriptC_Convolution(rs);
+
+                scriptC_average.set_gIn(input);
+                scriptC_average.set_gWidth(width);
+                scriptC_average.set_gHeight(height);
+                scriptC_average.set_gKernelSize(filterSizeAverage);
+
+                float[] coeffs_average = CreateMask.averaging(filterSizeAverage);
+                Allocation coeffs__average_alloc = Allocation.createSized(rs, Element.F32(rs), filterSizeAverage*filterSizeAverage, Allocation.USAGE_SCRIPT);
+                coeffs__average_alloc.copyFrom(coeffs_average);
+
+                scriptC_average.set_gCoeffs(coeffs__average_alloc);
+
+                scriptC_average.forEach_root(output);
+                scriptC_average.destroy();
+                output.copyTo(bmp);
                 break;
-                //TODO: égalisation (avec valeurs par défaut pour les previews)
-                //TODO: extension (avec valeurs par défaut pour les previews)
             default:
                 return;
         }
@@ -201,37 +250,90 @@ public class FilterRS {
                 } else {
                     filterSize = (int) value;
                 }
+                //ScriptC_convolve scriptC_convolve = new ScriptC_convolve(rs);
+                ScriptC_Convolution scriptC_gaussian = new ScriptC_Convolution(rs);
 
-                ScriptC_convolve scriptC_convolve = new ScriptC_convolve(rs);
-
-                scriptC_convolve.set_gIn(input);
-                scriptC_convolve.set_gWidth(width);
-                scriptC_convolve.set_gHeight(height);
-                scriptC_convolve.set_gKernelSize(filterSize);
+                scriptC_gaussian.set_gIn(input);
+                scriptC_gaussian.set_gWidth(width);
+                scriptC_gaussian.set_gHeight(height);
+                scriptC_gaussian.set_gKernelSize(filterSize);
 
                 float[] coeffs = gaussianMatrix(filterSize, filterSize);
                 Allocation coeffs_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
                 coeffs_alloc.copyFrom(coeffs);
 
-                scriptC_convolve.set_gCoeffs(coeffs_alloc);
+                scriptC_gaussian.set_gCoeffs(coeffs_alloc);
 
-                scriptC_convolve.forEach_root(output);
-                scriptC_convolve.destroy();
+                scriptC_gaussian.forEach_root(output);
+                scriptC_gaussian.destroy();
                 output.copyTo(bmp);
                 break;
             case LAPLACE:
-                Convolution.ApplyConvolution(bmp, CreateMask.laplace(), 3);
+                filterSize = 3;
+                ScriptC_Convolution scriptC_laplace = new ScriptC_Convolution(rs);
+
+                scriptC_laplace.set_gIn(input);
+                scriptC_laplace.set_gWidth(width);
+                scriptC_laplace.set_gHeight(height);
+                scriptC_laplace.set_gKernelSize(filterSize);
+
+                float[] coeffs_laplace = {-1,-1,-1,-1,8,-1,-1,-1,-1};
+                Allocation coeffs__laplace_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
+                coeffs__laplace_alloc.copyFrom(coeffs_laplace);
+
+                scriptC_laplace.set_gCoeffs(coeffs__laplace_alloc);
+
+                scriptC_laplace.forEach_root(output);
+                scriptC_laplace.destroy();
+                output.copyTo(bmp);
                 break;
             case SOBEL:
-                Convolution.ApplyConvolution(bmp, CreateMask.sobelX(), 3);
-                Convolution.ApplyConvolution(bmp, CreateMask.sobelY(), 3);
+                filterSize = 3;
+                ScriptC_sobel scriptC_sobel = new ScriptC_sobel(rs);
+
+                scriptC_sobel.set_gIn(input);
+                scriptC_sobel.set_gWidth(width);
+                scriptC_sobel.set_gHeight(height);
+                scriptC_sobel.set_gKernelSize(filterSize);
+
+                float[] coeffs_sobel_x = {-1,0,1,-2,0,2,-1,0,1};
+                float[] coeffs_sobel_y = {-1,-2,-1,0,0,0,1,2,1};
+                Allocation sobelKernelX = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
+                Allocation sobelKernelY = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
+                sobelKernelX.copyFrom(coeffs_sobel_x);
+                sobelKernelY.copyFrom(coeffs_sobel_y);
+
+                scriptC_sobel.set_gCoeffsX(sobelKernelX);
+                scriptC_sobel.set_gCoeffsY(sobelKernelY);
+                scriptC_sobel.forEach_root(output);
+
+                scriptC_sobel.destroy();
+                output.copyTo(bmp);
                 break;
             case AVERAGE:
-                Convolution.ApplyConvolution(bmp, CreateMask.averaging((int)value), 5);
+                int filterSizeAverage;
+                if((int) value % 2 == 0) {
+                    filterSizeAverage = (int) value + 1;
+                } else {
+                    filterSizeAverage = (int) value;
+                }
+                ScriptC_Convolution scriptC_average = new ScriptC_Convolution(rs);
+
+                scriptC_average.set_gIn(input);
+                scriptC_average.set_gWidth(width);
+                scriptC_average.set_gHeight(height);
+                scriptC_average.set_gKernelSize(filterSizeAverage);
+
+                float[] coeffs_average = CreateMask.averaging(filterSizeAverage);
+                Allocation coeffs__average_alloc = Allocation.createSized(rs, Element.F32(rs), filterSizeAverage*filterSizeAverage, Allocation.USAGE_SCRIPT);
+                coeffs__average_alloc.copyFrom(coeffs_average);
+
+                scriptC_average.set_gCoeffs(coeffs__average_alloc);
+
+                scriptC_average.forEach_root(output);
+                scriptC_average.destroy();
+                output.copyTo(bmp);
                 break;
-                //TODO: égalisation
-                //TODO: extension
-                //TODO: convolution
             default:
                 return;
         }

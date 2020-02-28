@@ -30,10 +30,10 @@ public class CreateMask {
         return filter;
     }
 
-    static int[] averaging(int size){
-        int[] filter = new int[size*size];
+    static float[] averaging(int size){
+        float[] filter = new float[size*size];
         for(int i=0; i<size*size; i++){
-            filter[i]= 1;
+            filter[i]= 1.f/(float)(size*size);
         }
         return filter;
     }
