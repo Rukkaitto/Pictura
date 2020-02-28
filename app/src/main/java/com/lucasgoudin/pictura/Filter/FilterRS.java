@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import com.lucasgoudin.pictura.ScriptC_brightness;
+import com.lucasgoudin.pictura.ScriptC_convolve;
 import com.lucasgoudin.pictura.ScriptC_gray;
 import com.lucasgoudin.pictura.ScriptC_isolate;
 import com.lucasgoudin.pictura.ScriptC_tint;
@@ -190,7 +191,30 @@ public class FilterRS {
                 break;
 
             case BLUR:
-                Convolution.ApplyConvolution(bmp, CreateMask.gaussien((int)value), 5);
+                //Convolution.ApplyConvolution(bmp, CreateMask.gaussien((int)value), 5);
+                int filterSize;
+                if((int) value % 2 == 0) {
+                    filterSize = (int) value + 1;
+                } else {
+                    filterSize = (int) value;
+                }
+
+                ScriptC_convolve scriptC_convolve = new ScriptC_convolve(rs);
+
+                scriptC_convolve.set_gIn(input);
+                scriptC_convolve.set_gWidth(width);
+                scriptC_convolve.set_gHeight(height);
+                scriptC_convolve.set_gKernelSize(filterSize);
+
+                float[] coeffs = gaussianMatrix(filterSize, value);
+                Allocation coeffs_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
+                coeffs_alloc.copyFrom(coeffs);
+
+                scriptC_convolve.set_gCoeffs(coeffs_alloc);
+
+                scriptC_convolve.forEach_root(output);
+                scriptC_convolve.destroy();
+                output.copyTo(bmp);
                 break;
             case LAPLACE:
                 Convolution.ApplyConvolution(bmp, CreateMask.laplace(), 3);
@@ -215,6 +239,34 @@ public class FilterRS {
         output.destroy();
         rs.destroy();
     }
+
+    float[] gaussianMatrix(int size, float sigma) {
+        float kernel[] = new float[size*size];
+        float mean = size / 2;
+        float sum = 0.0f; // For accumulating the kernel values
+        for (int x = 0; x < size; ++x) {
+            for (int y = 0; y < size; ++y) {
+                kernel[x + y * size] = (float)(Math.exp(-0.5 * (Math.pow((x - mean) / sigma, 2.0) + Math.pow((y - mean) / sigma, 2.0))))
+                        / (float)(2 * Math.PI * sigma * sigma);
+
+                // Accumulate the kernel values
+                sum += kernel[x + y * size];
+            }
+        }
+
+        for(int x = 0; x < size; x++) {
+            for(int y = 0; y < size; y++) {
+                kernel[x + y * size] /= sum;
+            }
+        }
+
+        return kernel;
+    }
+
+
+
+
+
 
     /**
      * @return the Activity's context

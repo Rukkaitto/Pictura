@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
         Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE, this)));
         Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT, this)), 0, 359);
         Filter isolate = new Filter(isolateBtn, new FilterPreview(image, new FilterRS(FilterName.ISOLATE, this)), 0, 359);
-        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR, this)), 5, 8);
+        Filter blur = new Filter(blurBtn, new FilterPreview(image, new FilterRS(FilterName.BLUR, this)), 3, 11);
         Filter laplace = new Filter(laplaceBtn, new FilterPreview(image, new FilterRS(FilterName.LAPLACE, this)));
         Filter sobel = new Filter(sobelBtn, new FilterPreview(image, new FilterRS(FilterName.SOBEL, this)));
         Filter average = new Filter(averageBtn, new FilterPreview(image, new FilterRS(FilterName.AVERAGE, this)), 5, 8);
@@ -555,7 +555,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveImage(Bitmap bitmap, String folderName) {
         if(Build.VERSION.SDK_INT >= 29) {
             ContentValues values = contentValues();
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + "Pictura");
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + folderName);
             values.put(MediaStore.Images.Media.IS_PENDING, true);
 
             Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
