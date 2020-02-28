@@ -83,18 +83,11 @@ public class FilterRS {
                 output.copyTo(bmp);
                 break;
             case IMPROVE:
-                /*float[] histcumul = new float[256];
-                histcumul = createHist(bmp);
-
-                Allocation hist_alloc = Allocation.createSized( rs, Element.F32_4(rs), 256);
-                hist_alloc.copyFrom(histcumul);*/
-
                 ScriptC_improve improveScript = new ScriptC_improve(rs);
                 improveScript.set_size(width*height);
-                //improveScript.bind_hist_cumul(hist_alloc);
                 improveScript.forEach_root(input, output);
                 improveScript.invoke_createRemapArray();
-                improveScript.forEach_remaptoRGB(output, input);
+                improveScript.forEach_remaptoRGB(input, output);
                 improveScript.destroy();
                 output.copyTo(bmp);
                 break;
@@ -173,18 +166,11 @@ public class FilterRS {
                 break;
 
             case IMPROVE:
-                /*float[] histcumul = new float[256];
-                histcumul = createHist(bmp);
-
-                Allocation hist_alloc = Allocation.createSized( rs, Element.F32_4(rs), 256);
-                hist_alloc.copyFrom(histcumul);*/
-
                 ScriptC_improve improveScript = new ScriptC_improve(rs);
                 improveScript.set_size(width*height);
-                //improveScript.bind_hist_cumul(hist_alloc);
                 improveScript.forEach_root(input, output);
                 improveScript.invoke_createRemapArray();
-                improveScript.forEach_remaptoRGB(output, input);
+                improveScript.forEach_remaptoRGB(input, output);
                 improveScript.destroy();
                 output.copyTo(bmp);
                 break;

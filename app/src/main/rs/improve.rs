@@ -2,7 +2,6 @@
 #pragma rs java_package_name(com.lucasgoudin.pictura)
 #include "rs_debug.rsh"
 
-float* hist_cumul;
 
 static float3 RGBtoHSV(float4 pixelf) {
     float3 primes = {pixelf.r / 255.0f, pixelf.g / 255.0f, pixelf.b / 255.0f};
@@ -86,38 +85,19 @@ static float3 HSVtoColor(float3 hsv) {
 }
 
 
-
-uchar4 RS_KERNEL improve(uchar4 in) {
-    const float4 pixelf = rsUnpackColor8888(in);
-    float3 hsv = RGBtoHSV(pixelf);
-    //hsv.z = hist_cumul[(int)(hsv.z*255)];
-    //rsDebug("histcumul", hist_cumul[(int)(hsv.z*255)]);
-    float3 newpixelf = HSVtoColor(hsv);
-    return rsPackColorTo8888(newpixelf);
-
-}
-///////////////////////////////////////////////////////////////
-
 int32_t histo[256];
 float remapArray[256];
 int size;
 
-//Method to keep the result between 0 and 1
-static float bound (float val) {
-    float m = fmax(0.0f, val);
-    return fmin(1.0f, m);
-}
-
-uchar4 __attribute__((kernel)) root(uchar4 in, uint32_t x, uint32_t y) {
+uchar4 RS_KERNEL root(uchar4 in) {
     //Convert input uchar4 to float4
 
     float4 f4 = rsUnpackColor8888(in);
 
-    //Get hsv channels values
+    //Convert into hsv values
     float3 hsv = RGBtoHSV(f4);
     //Get v value between 0 and 255 (included)
-    int32_t val = fmod(hsv.z * 255*1000, 255.0f);
-
+    int32_t val = fmod(hsv.z * 255.0f, 255.0f);
 
     //Increment histogram for that value
     rsAtomicInc(&histo[val]);
@@ -128,20 +108,21 @@ uchar4 __attribute__((kernel)) root(uchar4 in, uint32_t x, uint32_t y) {
     return rsPackColorTo8888(newpixelf);
 }
 
-uchar4 __attribute__((kernel)) remaptoRGB(uchar4 in, uint32_t x, uint32_t y) {
+uchar4 RS_KERNEL remaptoRGB(uchar4 in) {
     //Convert input uchar4 to float4
     float4 f4 = rsUnpackColor8888(in);
 
-    //Get hsv channels values
+    //Convert into hsv values
     float3 hsv = RGBtoHSV(f4);
 
     //Get v value between 0 and 255 (included)
-    int32_t val = fmod(hsv.z * 255*1000, 255.0f);
+    int32_t val = hsv.z * 25500.0f;
+    //rsDebug("val : ", val);
+    //rsDebug("remaparray : ", remapArray[val]);
     //Get v new value in the map array
-    hsv.z = remapArray[val];
-
+    hsv.z = remapArray[val]/25500.0f;
+    //rsDebug("hsv : ", hsv.z);
     float3 newpixelf = HSVtoColor(hsv);
-
     //Put the values in the output uchar4
     return rsPackColorTo8888(newpixelf);
 }
@@ -158,8 +139,7 @@ void createRemapArray() {
     //create map for v
     float sum = 0;
     for (int i = 0; i < 256; i++) {
-        //rsAtomicAdd(&sum , (histo[i]/size))
-        //sum += histo[i]/ (size);
+        sum += native_divide((float)histo[i],(float) (size));
         //rsDebug("sum : ", sum);
         if (i==0){
             remapArray[i] = sum;
