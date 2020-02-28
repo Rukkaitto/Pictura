@@ -18,5 +18,5 @@ void contrast(const uchar4 *in, uchar4 *out) {
     float3 v = convert_float3(in->rgb) * brightM + brightC;
     out->rgb = convert_uchar3(clamp(v, 0.f, 255.f));
 #endif
-
+    out->a = 255;
 }

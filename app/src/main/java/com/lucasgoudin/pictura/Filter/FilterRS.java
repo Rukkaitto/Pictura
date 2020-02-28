@@ -80,6 +80,7 @@ public class FilterRS {
                 mScript.invoke_setBright(50.f);
                 mScript.forEach_contrast(input, output);
                 mScript.destroy();
+                output.copyTo(bmp);
                 break;
             case IMPROVE:
                 /*float[] histcumul = new float[256];
@@ -95,6 +96,7 @@ public class FilterRS {
                 improveScript.invoke_createRemapArray();
                 improveScript.forEach_remaptoRGB(output, input);
                 improveScript.destroy();
+                output.copyTo(bmp);
                 break;
             case BLUR:
                 Convolution.ApplyConvolution(bmp, CreateMask.gaussien(5), 5); //size -> variable
@@ -167,6 +169,7 @@ public class FilterRS {
                 mScript.invoke_setBright(50.f);
                 mScript.forEach_contrast(input, output);
                 mScript.destroy();
+                output.copyTo(bmp);
                 break;
 
             case IMPROVE:
@@ -183,6 +186,7 @@ public class FilterRS {
                 improveScript.invoke_createRemapArray();
                 improveScript.forEach_remaptoRGB(output, input);
                 improveScript.destroy();
+                output.copyTo(bmp);
                 break;
 
             case BLUR:
