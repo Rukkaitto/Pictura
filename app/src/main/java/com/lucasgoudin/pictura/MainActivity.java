@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
         filterScrollView = findViewById(R.id.filters);
         noPhotoMessage = findViewById(R.id.noPhotoMessage);
-        filterScrollView.setVisibility(View.INVISIBLE);
-        photoView.setVisibility(View.INVISIBLE);
+        //filterScrollView.setVisibility(View.INVISIBLE);
+        //photoView.setVisibility(View.INVISIBLE);
 
     }
 

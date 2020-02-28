@@ -41,6 +41,9 @@ public class FilterRS {
      * @param bmp the bitmap to apply the filter to
      */
     void apply(Bitmap bmp) {
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
+
         Allocation input = Allocation.createFromBitmap(rs, bmp);
         Allocation output = Allocation.createTyped(rs, input.getType());
 
@@ -73,26 +76,25 @@ public class FilterRS {
                 output.copyTo(bmp);
                 break;
             case CONTRAST:
-                float[] LUT = new float[256];
-                LUT = createLUT(bmp);
-                Allocation LUT_alloc = Allocation.createSized( rs, Element.F32_4(rs), Allocation.USAGE_SCRIPT);
-                LUT_alloc.copyFrom(LUT);
-                ScriptC_contrast contrastScript = new ScriptC_contrast(rs);
-                contrastScript.bind_LUT(LUT_alloc);
-                contrastScript.forEach_contrast(input, output);
-                contrastScript.destroy();
-                output.copyTo(bmp);
+                ScriptC_contrast mScript = new ScriptC_contrast(rs);
+                mScript.invoke_setBright(50.f);
+                mScript.forEach_contrast(input, output);
+                mScript.destroy();
                 break;
             case IMPROVE:
-                float[] histcumul = new float[256];
+                /*float[] histcumul = new float[256];
                 histcumul = createHist(bmp);
-                Allocation hist_alloc = Allocation.createSized( rs,Element.F32_4(rs) , Allocation.USAGE_SCRIPT);
-                hist_alloc.copyFrom(histcumul);
+
+                Allocation hist_alloc = Allocation.createSized( rs, Element.F32_4(rs), 256);
+                hist_alloc.copyFrom(histcumul);*/
+
                 ScriptC_improve improveScript = new ScriptC_improve(rs);
-                improveScript.bind_hist_cumul(hist_alloc);
-                improveScript.forEach_improve(input, output);
+                improveScript.set_size(width*height);
+                //improveScript.bind_hist_cumul(hist_alloc);
+                improveScript.forEach_root(input, output);
+                improveScript.invoke_createRemapArray();
+                improveScript.forEach_remaptoRGB(output, input);
                 improveScript.destroy();
-                output.copyTo(bmp);
                 break;
             case BLUR:
                 Convolution.ApplyConvolution(bmp, CreateMask.gaussien(5), 5); //size -> variable
@@ -126,6 +128,9 @@ public class FilterRS {
      * @param value the slider value which will be passed to the script
      */
     void apply(Bitmap bmp, float value) {
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
+
         Allocation input = Allocation.createFromBitmap(rs, bmp);
         Allocation output = Allocation.createTyped(rs, input.getType());
 
@@ -158,27 +163,28 @@ public class FilterRS {
                 output.copyTo(bmp);
                 break;
             case CONTRAST:
-                float[] LUT = new float[256];
-                LUT = createLUT(bmp);
-                Allocation LUT_alloc = Allocation.createSized( rs,Element.F32_4(rs) , Allocation.USAGE_SCRIPT);
-                LUT_alloc.copyFrom(LUT);
-                ScriptC_contrast contrastScript = new ScriptC_contrast(rs);
-                contrastScript.bind_LUT(LUT_alloc);
-                contrastScript.forEach_contrast(input, output);
-                contrastScript.destroy();
-                output.copyTo(bmp);
+                ScriptC_contrast mScript = new ScriptC_contrast(rs);
+                mScript.invoke_setBright(50.f);
+                mScript.forEach_contrast(input, output);
+                mScript.destroy();
                 break;
+
             case IMPROVE:
-                float[] histcumul = new float[256];
+                /*float[] histcumul = new float[256];
                 histcumul = createHist(bmp);
-                Allocation hist_alloc = Allocation.createSized( rs,Element.F32_4(rs) , Allocation.USAGE_SCRIPT);
-                hist_alloc.copyFrom(histcumul);
+
+                Allocation hist_alloc = Allocation.createSized( rs, Element.F32_4(rs), 256);
+                hist_alloc.copyFrom(histcumul);*/
+
                 ScriptC_improve improveScript = new ScriptC_improve(rs);
-                improveScript.bind_hist_cumul(hist_alloc);
-                improveScript.forEach_improve(input, output);
+                improveScript.set_size(width*height);
+                //improveScript.bind_hist_cumul(hist_alloc);
+                improveScript.forEach_root(input, output);
+                improveScript.invoke_createRemapArray();
+                improveScript.forEach_remaptoRGB(output, input);
                 improveScript.destroy();
-                output.copyTo(bmp);
                 break;
+
             case BLUR:
                 Convolution.ApplyConvolution(bmp, CreateMask.gaussien((int)value), 5);
                 break;
@@ -204,119 +210,6 @@ public class FilterRS {
         input.destroy();
         output.destroy();
         rs.destroy();
-    }
-
-    float[] createHist(Bitmap bmp){
-        int w = bmp.getWidth();
-        int h = bmp.getHeight();
-        int hist[] = new int [256];
-        final int[] pixels = new int[w * h];
-        float p;
-        float hsv[] = new float[3];
-        float hist_cumul[] = new float [256];
-
-        bmp.getPixels(pixels, 0, w, 0, 0, w, h);
-
-        //création de l'histogramme de niveau de gris de la photo.
-
-        for (int x = 0 ; x< w ; x++){
-            for (int y =0 ; y<h; y++) {
-
-                final int offset = y * w + x;
-
-                int r = Color.red(pixels[offset]);
-                int g = Color.green(pixels[offset]);
-                int b = Color.blue(pixels[offset]);
-
-                new_RGBToHSV(r,g,b,hsv);
-                hist[(int)(hsv[2]*255)] ++;
-            }
-        }
-        for (int i =0 ; i<256; i++){
-            p = (hist[i])/(float)(w*h);
-            if (i == 0){
-                hist_cumul[i] = p;
-            }
-            else{
-                hist_cumul[i] = hist_cumul[i-1] + p;
-            }
-        }
-        return hist_cumul;
-    }
-
-    float[] createLUT (Bitmap bmp){
-        float[] LUT = new float[256];
-        int w = bmp.getWidth();
-        int h = bmp.getHeight();
-        int min = 255;
-        int max = 0;
-        float hsv[] = new float[3];
-
-        int[] nb_pix = new int[w * h];
-
-        bmp.getPixels(nb_pix, 0, w, 0, 0, w, h);
-
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
-
-                int i = y * w + x;
-                int r = Color.red(nb_pix[i]);
-                int g = Color.green(nb_pix[i]);
-                int b = Color.blue(nb_pix[i]);
-
-                new_RGBToHSV(r,g,b,hsv);
-
-                if (min > (int)(hsv[2]*255)){
-                    min = (int)(hsv[2]*255);
-                }
-                if (max < (int)(hsv[2]*255)){
-                    max = (int)(hsv[2]*255);
-                }
-            }
-        }
-
-        for (int ng = 0; ng < 256; ng++) {
-            LUT[ng] = (255 * (ng - min)) / (max - min);
-        }
-        return LUT;
-    }
-
-    static void new_RGBToHSV(int r, int g, int b, float[] hsv) {
-        float r2 = r / 255.f;
-        float g2 = g / 255.f;
-        float b2 = b / 255.f;
-
-        float rgbmax = Math.max(r2, g2);
-        float cmax = Math.max(rgbmax, b2);
-
-        float rgbmin = Math.min(r2, g2);
-        float cmin = Math.min(rgbmin, b2);
-
-        float d = cmax - cmin;
-
-        float h = 0;
-
-        if (d == 0) {
-            h = 0;
-        } else if (cmax == r2) {
-            h = 60 * (((g2 - b2) % 6) / d);
-        } else if (cmax == g2) {
-            h = 60 * (((b2 - r2) / d) + 2);
-        } else if (cmax == b2) {
-            h = 60 * (((r2 - g2) / d) + 4);
-        }
-
-        float s = 0;
-
-        if (cmax == 0) {
-            s = 0;
-        } else {
-            s = d / cmax;
-        }
-
-        hsv[0] = h;
-        hsv[1] = s;
-        hsv[2] = cmax;
     }
 
     /**
