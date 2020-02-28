@@ -94,7 +94,7 @@ public class FilterRS {
                 output.copyTo(bmp);
                 break;
             case BLUR:
-                int filterSize = 25;
+                int filterSize = 11;
                 ScriptC_Convolution scriptC_gaussian = new ScriptC_Convolution(rs);
 
                 scriptC_gaussian.set_gIn(input);
@@ -258,7 +258,7 @@ public class FilterRS {
                 scriptC_gaussian.set_gHeight(height);
                 scriptC_gaussian.set_gKernelSize(filterSize);
 
-                float[] coeffs = gaussianMatrix(filterSize, filterSize);
+                float[] coeffs = gaussianMatrix(filterSize, filterSize*2);
                 Allocation coeffs_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
                 coeffs_alloc.copyFrom(coeffs);
 
@@ -345,9 +345,9 @@ public class FilterRS {
         rs.destroy();
     }
 
-    float[] gaussianMatrix(int size, float sigma) {
+    private float[] gaussianMatrix(int size, float sigma) {
         float kernel[] = new float[size*size];
-        float mean = size / 2;
+        float mean = size / 2.f;
         float sum = 0.0f; // For accumulating the kernel values
         for (int x = 0; x < size; ++x) {
             for (int y = 0; y < size; ++y) {
