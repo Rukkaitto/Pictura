@@ -107,7 +107,7 @@ public class FilterRS {
                 scriptC_gaussian.set_gHeight(height);
                 scriptC_gaussian.set_gKernelSize(filterSize);
 
-                float[] coeffs = gaussianMatrix(filterSize, filterSize);
+                float[] coeffs = CreateMask.gaussian(filterSize, filterSize);
                 Allocation coeffs_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
                 coeffs_alloc.copyFrom(coeffs);
 
@@ -267,7 +267,7 @@ public class FilterRS {
                 scriptC_gaussian.set_gHeight(height);
                 scriptC_gaussian.set_gKernelSize(filterSize);
 
-                float[] coeffs = gaussianMatrix(filterSize, filterSize*2);
+                float[] coeffs = CreateMask.gaussian(filterSize, filterSize*2);
                 Allocation coeffs_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
                 coeffs_alloc.copyFrom(coeffs);
 
@@ -346,36 +346,12 @@ public class FilterRS {
             default:
                 return;
         }
-
-
-
         input.destroy();
         output.destroy();
         rs.destroy();
     }
 
-    private float[] gaussianMatrix(int size, float sigma) {
-        float kernel[] = new float[size*size];
-        float mean = size / 2.f;
-        float sum = 0.0f; // For accumulating the kernel values
-        for (int x = 0; x < size; ++x) {
-            for (int y = 0; y < size; ++y) {
-                kernel[x + y * size] = (float)(Math.exp(-0.5 * (Math.pow((x - mean) / sigma, 2.0) + Math.pow((y - mean) / sigma, 2.0))))
-                        / (float)(2 * Math.PI * sigma * sigma);
 
-                // Accumulate the kernel values
-                sum += kernel[x + y * size];
-            }
-        }
-
-        for(int x = 0; x < size; x++) {
-            for(int y = 0; y < size; y++) {
-                kernel[x + y * size] /= sum;
-            }
-        }
-
-        return kernel;
-    }
 
 
 

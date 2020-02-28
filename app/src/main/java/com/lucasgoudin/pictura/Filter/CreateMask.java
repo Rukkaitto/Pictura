@@ -8,26 +8,24 @@ import static java.lang.Math.sqrt;
 public class CreateMask {
     static final double sigma = 0.8;
 
-    static int[] gaussien(int size){
-        int halfSize = (size-1)/2;
-        int[] filter = new int[size*size];
-        double[] temp = new double[size*size];
-        int index = 0;
-        int kernelFactor=0;
-        for(int y=-halfSize; y<=halfSize; y++){
-            for(int x=-halfSize; x<=halfSize; x++){
-                temp[index] = (1/(2*PI*sigma*sigma)) * exp(-((x*x)+(y*y))/(2*(sigma*sigma)));
-                index++;
+    static float[] gaussian(int size, float sigma) {
+        float kernel[] = new float[size*size];
+        float mean = size / 2.f;
+        float sum = 0.0f; // For accumulating the kernel values
+        for (int x = 0; x < size; ++x) {
+            for (int y = 0; y < size; ++y) {
+                kernel[x + y * size] = (float)(Math.exp(-0.5 * (Math.pow((x - mean) / sigma, 2.0) + Math.pow((y - mean) / sigma, 2.0))))
+                        / (float)(2 * Math.PI * sigma * sigma);
+                // Accumulate the kernel values
+                sum += kernel[x + y * size];
             }
         }
-        kernelFactor = (int) (1/temp[0]);
-        for(int i=0; i<size*size;i++){
-            filter[i] = (int) (temp[i] * kernelFactor);
-            if(filter[i] == 0 && temp[i] !=0){
-                filter[i] = 1;
+        for(int x = 0; x < size; x++) {
+            for(int y = 0; y < size; y++) {
+                kernel[x + y * size] /= sum;
             }
         }
-        return filter;
+        return kernel;
     }
 
     static float[] averaging(int size){
@@ -37,21 +35,4 @@ public class CreateMask {
         }
         return filter;
     }
-
-    static int[] laplace(){
-        int filter[] = {0,1,0,1,-4,1,0,1,0};
-        return filter;
-    }
-
-    static int[] sobelX(){
-        int filter[] = {1,0,-1,2,0,-2,1,0,-1};
-        return filter;
-    }
-
-    static int[] sobelY(){
-        int filter[] = {1,2,1,0,0,0,-1,-2,-1};
-        return filter;
-    }
-
-
 }

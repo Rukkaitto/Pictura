@@ -6,7 +6,7 @@ import android.graphics.Color;
 public class Convolution {
 
     static final int rgbMax = 255;
-    static String ApplyConvolution(Bitmap bmp, int[] filter, int sizeFilter){
+    static void ApplyConvolution(Bitmap bmp, int[] filter, int sizeFilter){
         //recover the information about the picture + pixel
         int w = bmp.getWidth();
         int h = bmp.getHeight();
@@ -17,14 +17,10 @@ public class Convolution {
         int halfSize = (sizeFilter-1)/2;
         int indexF; //index of the neighbor
 
-        //temp
-        String test = "test";
-
         for(int y=0; y<h; y++){
             for(int x=0; x<w; x++){
                 int index = y * w + x;
                 int cptF=0; //index for the kernel
-                int totalF = 0; //sum of all kernel's coef
 
                 //recover information about the pixel x,y
                 int pixel = pixels[index];
@@ -46,28 +42,17 @@ public class Convolution {
                             g += gF*filter[cptF];
                             b += bF*filter[cptF];
 
-                            totalF += filter[cptF];
                         }
                         cptF++;
                     }
                 }
-                if(totalF == 0){    //Laplace + Sobel
-                    totalF = 1;
-                }
-                r /= totalF;
-                g /= totalF;
-                b /= totalF;
-                if(r > 255) {
-                    r = rgbMax;
-                }if(g > 255){
-                    g = rgbMax;
-                }if(b > 255 ){
-                    b = rgbMax;
-                }
+                r = Math.min(255, Math.max(0,r));
+                g = Math.min(255, Math.max(0,g));
+                b = Math.min(255, Math.max(0,b));
+
                 pixels [index] = Color.rgb(r,g,b);
             }
         }
         bmp.setPixels(pixels,0,w,0,0,w,h);
-        return test;
     }
 }
