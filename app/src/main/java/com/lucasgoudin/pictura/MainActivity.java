@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void save() {
+        Toast.makeText(getApplicationContext(), R.string.saving, Toast.LENGTH_LONG).show();
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, SAVE_IMAGE);
     }
 
