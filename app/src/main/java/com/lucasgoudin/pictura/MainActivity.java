@@ -18,6 +18,7 @@ import android.icu.util.Output;
 import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Environment;
@@ -532,41 +533,67 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private ContentValues contentValues()  {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
+        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        return values;
+    }
 
+    private void saveImageToStream(Bitmap bitmap, OutputStream outputStream) {
+        if (outputStream != null) {
+            try {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void saveImage(Bitmap bitmap, String folderName) {
+        if(Build.VERSION.SDK_INT >= 29) {
+            ContentValues values = contentValues();
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" + "Pictura");
+            values.put(MediaStore.Images.Media.IS_PENDING, true);
+
+            Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            if(uri != null) {
+                try {
+                    saveImageToStream(bitmap, getContentResolver().openOutputStream(uri));
+                    values.put(MediaStore.Images.Media.IS_PENDING, false);
+                    getContentResolver().update(uri, values, null, null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            File directory = new File(Environment.getExternalStorageDirectory().toString() + File.separator + folderName);
+            if(!directory.exists()) {
+                directory.mkdirs();
+            }
+            String fileName = System.currentTimeMillis() + ".jpg";
+            File file = new File(directory, fileName);
+            try {
+                saveImageToStream(bitmap, new FileOutputStream(file));
+                ContentValues values = contentValues();
+                values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+                getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == SAVE_IMAGE) {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                try {
-                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + getResources().getString(R.string.app_name) + File.separator;
-                    System.out.println(path);
-                    File dir = new File(path);
-                    if(!dir.exists()){
-                        dir.mkdirs();
-                    }
-                    OutputStream out;
-                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-                    File photoFile = new File(path, timeStamp + ".jpg");
-                    photoFile.createNewFile();
-
-                    out = new FileOutputStream(photoFile);
-
-                    Bitmap full_image_result = full_image.copy(full_image.getConfig(), true);
-                    selectedFilter.apply(full_image_result);
-                    full_image_result.compress(Bitmap.CompressFormat.JPEG, 90, out);
-
-                    out.flush();
-                    out.close();
-
-                    MediaScannerConnection.scanFile(this, new String[]{photoFile.getAbsolutePath()}, new String[]{"image/jpg"}, null);
-
-                    Toast.makeText(getApplicationContext(),R.string.savedMessage, Toast.LENGTH_LONG).show();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Bitmap full_image_result = full_image.copy(full_image.getConfig(), true);
+                selectedFilter.apply(full_image_result);
+                saveImage(full_image_result, getResources().getString(R.string.app_name));
+                Toast.makeText(getApplicationContext(), R.string.savedMessage, Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(getApplicationContext(), R.string.noPermissions, Toast.LENGTH_LONG).show();
             }

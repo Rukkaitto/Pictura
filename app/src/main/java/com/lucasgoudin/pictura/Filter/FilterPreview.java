@@ -1,7 +1,9 @@
 package com.lucasgoudin.pictura.Filter;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.util.DisplayMetrics;
+import android.view.Display;
 
 import com.lucasgoudin.pictura.Settings;
 
@@ -71,10 +73,8 @@ public class FilterPreview {
         this.bmp = scaleBitmap(image);
         applyFilter();
         bmp_d = RoundedBitmapDrawableFactory.create(context.getResources(), this.bmp);
-        DisplayMetrics dm = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        bmp_d.setTargetDensity(dm);
-        bmp_d.setCornerRadius(Settings.CORNER_RADIUS);
+        int radius = 360;
+        bmp_d.setCornerRadius(radius);
     }
 
     /**
