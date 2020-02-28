@@ -93,7 +93,24 @@ public class FilterRS {
                 output.copyTo(bmp);
                 break;
             case BLUR:
-                Convolution.ApplyConvolution(bmp, CreateMask.gaussien(5), 5); //size -> variable
+                int filterSize = 25;
+
+                ScriptC_convolve scriptC_convolve = new ScriptC_convolve(rs);
+
+                scriptC_convolve.set_gIn(input);
+                scriptC_convolve.set_gWidth(width);
+                scriptC_convolve.set_gHeight(height);
+                scriptC_convolve.set_gKernelSize(filterSize);
+
+                float[] coeffs = gaussianMatrix(filterSize, filterSize);
+                Allocation coeffs_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
+                coeffs_alloc.copyFrom(coeffs);
+
+                scriptC_convolve.set_gCoeffs(coeffs_alloc);
+
+                scriptC_convolve.forEach_root(output);
+                scriptC_convolve.destroy();
+                output.copyTo(bmp);
                 break;
             case LAPLACE:
                 Convolution.ApplyConvolution(bmp, CreateMask.laplace(), 3); //size -> do not modify
@@ -192,7 +209,7 @@ public class FilterRS {
                 scriptC_convolve.set_gHeight(height);
                 scriptC_convolve.set_gKernelSize(filterSize);
 
-                float[] coeffs = gaussianMatrix(filterSize, value);
+                float[] coeffs = gaussianMatrix(filterSize, filterSize);
                 Allocation coeffs_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
                 coeffs_alloc.copyFrom(coeffs);
 
