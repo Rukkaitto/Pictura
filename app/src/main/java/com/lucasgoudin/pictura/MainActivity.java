@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
         filterScrollView = findViewById(R.id.filters);
         noPhotoMessage = findViewById(R.id.noPhotoMessage);
-        //filterScrollView.setVisibility(View.INVISIBLE);
-        //photoView.setVisibility(View.INVISIBLE);
+        filterScrollView.setVisibility(View.INVISIBLE);
+        photoView.setVisibility(View.INVISIBLE);
 
     }
 
@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
         // Filters
         Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY, this)));
         Filter brightness = new Filter(brightnessBtn, new FilterPreview(image, new FilterRS(FilterName.BRIGHTNESS, this)), -255.f, 254.f);
-        Filter contrast = new Filter(contrastBtn, new FilterPreview(image, new FilterRS(FilterName.CONTRAST, this)));
+        Filter contrast = new Filter(contrastBtn, new FilterPreview(image, new FilterRS(FilterName.CONTRAST, this)), -100.f, 100.f);
         Filter improve = new Filter(improveBtn, new FilterPreview(image, new FilterRS(FilterName.IMPROVE, this)));
         Filter tint = new Filter(tintBtn, new FilterPreview(image, new FilterRS(FilterName.TINT, this)), 0, 359);
         Filter isolate = new Filter(isolateBtn, new FilterPreview(image, new FilterRS(FilterName.ISOLATE, this)), 0, 359);

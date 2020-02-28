@@ -166,7 +166,7 @@ public class FilterRS {
                 break;
             case CONTRAST:
                 ScriptC_contrast mScript = new ScriptC_contrast(rs);
-                mScript.invoke_setBright(50.f);
+                mScript.invoke_setBright(value);
                 mScript.forEach_contrast(input, output);
                 mScript.destroy();
                 output.copyTo(bmp);
