@@ -85,13 +85,18 @@ public class FilterRS {
                 output.copyTo(bmp);
                 break;
             case IMPROVE:
+                Allocation allocationA = Allocation.createFromBitmap(rs, bmp);
+                Allocation allocationB = Allocation.createTyped(rs, allocationA.getType());
+
                 ScriptC_improve improveScript = new ScriptC_improve(rs);
-                improveScript.set_size(width*height);
-                improveScript.forEach_root(input, output);
+                improveScript.set_size(width * height);
+                improveScript.forEach_root(allocationA, allocationB);
                 improveScript.invoke_createRemapArray();
-                improveScript.forEach_remaptoRGB(input, output);
+                improveScript.forEach_remaptoRGB(allocationB, allocationA);
+                allocationA.copyTo(bmp);
+                allocationA.destroy();
+                allocationB.destroy();
                 improveScript.destroy();
-                output.copyTo(bmp);
                 break;
             case BLUR:
                 int filterSize = 11;
@@ -233,15 +238,19 @@ public class FilterRS {
                 break;
 
             case IMPROVE:
-                ScriptC_improve improveScript = new ScriptC_improve(rs);
-                improveScript.set_size(width*height);
-                improveScript.forEach_root(input, output);
-                improveScript.invoke_createRemapArray();
-                improveScript.forEach_remaptoRGB(input, output);
-                improveScript.destroy();
-                output.copyTo(bmp);
-                break;
+                Allocation allocationA = Allocation.createFromBitmap(rs, bmp);
+                Allocation allocationB = Allocation.createTyped(rs, allocationA.getType());
 
+                ScriptC_improve improveScript = new ScriptC_improve(rs);
+                improveScript.set_size(width * height);
+                improveScript.forEach_root(allocationA, allocationB);
+                improveScript.invoke_createRemapArray();
+                improveScript.forEach_remaptoRGB(allocationB, allocationA);
+                allocationA.copyTo(bmp);
+                allocationA.destroy();
+                allocationB.destroy();
+                improveScript.destroy();
+                break;
             case BLUR:
                 //Convolution.ApplyConvolution(bmp, CreateMask.gaussien((int)value), 5);
                 int filterSize;
