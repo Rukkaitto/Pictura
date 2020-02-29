@@ -22,4 +22,5 @@
     <string name="laplace">Laplace</string>
     <string name="average">Moyenneur</string>
     <string name="saving">Enregistrement...</string>
+    <string name="drawing">Dessin</string>
 </resources>

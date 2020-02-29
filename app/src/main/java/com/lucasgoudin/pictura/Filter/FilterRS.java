@@ -5,6 +5,7 @@ import android.graphics.Color;
 
 import com.lucasgoudin.pictura.ScriptC_Convolution;
 import com.lucasgoudin.pictura.ScriptC_brightness;
+import com.lucasgoudin.pictura.ScriptC_drawing;
 import com.lucasgoudin.pictura.ScriptC_gray;
 import com.lucasgoudin.pictura.ScriptC_isolate;
 import com.lucasgoudin.pictura.ScriptC_sobel;
@@ -178,6 +179,41 @@ public class FilterRS {
                 scriptC_average.destroy();
                 output.copyTo(bmp);
                 break;
+            case DRAWING:
+                ScriptC_gray grayScriptDrawing = new ScriptC_gray(rs);
+                Allocation temp = Allocation.createTyped(rs, output.getType());
+                grayScriptDrawing.forEach_toGray(input, temp);
+                grayScriptDrawing.destroy();
+
+                filterSize = 6;
+                ScriptC_drawing scriptC_drawing = new ScriptC_drawing(rs);
+
+                scriptC_drawing.set_gIn(temp);
+                scriptC_drawing.set_gWidth(width);
+                scriptC_drawing.set_gHeight(height);
+                scriptC_drawing.set_gKernelSize(filterSize);
+
+                float[] coeffs_drawing = {  1,1,1,1,1,1,
+                                            1,1,1,1,1,1,
+                                            1,1,-8,-8,1,1,
+                                            1,1,-8,-8,1,1,
+                                            1,1,1,1,1,1,
+                                            1,1,1,1,1,1};
+
+
+                //float[] coeffs_drawing = {1,1,1,1,-8,1,1,1,1};
+                for(int i = 0; i < coeffs_drawing.length; i++) {
+                    coeffs_drawing[i] /= 8;
+                }
+                Allocation coeffs_drawing_allocation = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
+                coeffs_drawing_allocation.copyFrom(coeffs_drawing);
+
+                scriptC_drawing.set_gCoeffs(coeffs_drawing_allocation);
+                scriptC_drawing.forEach_root(output);
+
+                scriptC_drawing.destroy();
+                output.copyTo(bmp);
+                break;
             default:
                 return;
         }
@@ -341,6 +377,41 @@ public class FilterRS {
 
                 scriptC_average.forEach_root(output);
                 scriptC_average.destroy();
+                output.copyTo(bmp);
+                break;
+            case DRAWING:
+                ScriptC_gray grayScriptDrawing = new ScriptC_gray(rs);
+                Allocation temp = Allocation.createTyped(rs, output.getType());
+                grayScriptDrawing.forEach_toGray(input, temp);
+                grayScriptDrawing.destroy();
+
+                filterSize = 6;
+                ScriptC_drawing scriptC_drawing = new ScriptC_drawing(rs);
+
+                scriptC_drawing.set_gIn(temp);
+                scriptC_drawing.set_gWidth(width);
+                scriptC_drawing.set_gHeight(height);
+                scriptC_drawing.set_gKernelSize(filterSize);
+
+                float[] coeffs_drawing = {1,1,1,1,1,1,
+                                          1,1,1,1,1,1,
+                                          1,1,-8,-8,1,1,
+                                          1,1,-8,-8,1,1,
+                                          1,1,1,1,1,1,
+                                          1,1,1,1,1,1};
+
+
+                //float[] coeffs_drawing = {1,1,1,1,-8,1,1,1,1};
+                for(int i = 0; i < coeffs_drawing.length; i++) {
+                    coeffs_drawing[i] /= (11 - (int)value);
+                }
+                Allocation coeffs_drawing_allocation = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
+                coeffs_drawing_allocation.copyFrom(coeffs_drawing);
+
+                scriptC_drawing.set_gCoeffs(coeffs_drawing_allocation);
+                scriptC_drawing.forEach_root(output);
+
+                scriptC_drawing.destroy();
                 output.copyTo(bmp);
                 break;
             default:
