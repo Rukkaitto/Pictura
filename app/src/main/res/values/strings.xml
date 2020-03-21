@@ -12,6 +12,7 @@
     <string name="average">Average</string>
     <string name="laplace">Laplace</string>
     <string name="sobel">Sobel</string>
+    <string name="drawing">Drawing</string>
 
 
     <!-- Button icons descriptions-->

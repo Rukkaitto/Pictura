@@ -13,5 +13,6 @@ public enum FilterName {
     BLUR,
     LAPLACE,
     SOBEL,
-    AVERAGE
+    AVERAGE,
+    DRAWING
 }
