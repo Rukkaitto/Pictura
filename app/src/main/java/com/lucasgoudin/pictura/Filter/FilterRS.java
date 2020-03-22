@@ -41,202 +41,11 @@ public class FilterRS {
     }
 
     /**
-     * Applies the filter to a bitmap with default values (used for previews)
-     * @param bmp the bitmap to apply the filter to
-     */
-    void apply(Bitmap bmp) {
-        int width = bmp.getWidth();
-        int height = bmp.getHeight();
-
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
-        switch (filterName) {
-            case TOGRAY:
-                ScriptC_gray grayScript = new ScriptC_gray(rs);
-                grayScript.forEach_toGray(input, output);
-                grayScript.destroy();
-                output.copyTo(bmp);
-                break;
-            case BRIGHTNESS:
-                ScriptC_brightness brightnessScript = new ScriptC_brightness(rs);
-                brightnessScript.invoke_setBright(150.f);
-                brightnessScript.forEach_brightness(input, output);
-                brightnessScript.destroy();
-                output.copyTo(bmp);
-                break;
-            case TINT:
-                ScriptC_tint tintScript = new ScriptC_tint(rs);
-                tintScript.set_hue(new Random().nextFloat() * 359);
-                tintScript.forEach_tint(input, output);
-                tintScript.destroy();
-                output.copyTo(bmp);
-                break;
-            case ISOLATE:
-                ScriptC_isolate isolateScript = new ScriptC_isolate(rs);
-                isolateScript.set_hue(0.0f);
-                isolateScript.forEach_isolate(input, output);
-                isolateScript.destroy();
-                output.copyTo(bmp);
-                break;
-            case CONTRAST:
-                ScriptC_contrast mScript = new ScriptC_contrast(rs);
-                mScript.invoke_setBright(50.f);
-                mScript.forEach_contrast(input, output);
-                mScript.destroy();
-                output.copyTo(bmp);
-                break;
-            case IMPROVE:
-                Allocation allocationA = Allocation.createFromBitmap(rs, bmp);
-                Allocation allocationB = Allocation.createTyped(rs, allocationA.getType());
-
-                ScriptC_improve improveScript = new ScriptC_improve(rs);
-                improveScript.set_size(width * height);
-                improveScript.forEach_root(allocationA, allocationB);
-                improveScript.invoke_createRemapArray();
-                improveScript.forEach_remaptoRGB(allocationB, allocationA);
-                allocationA.copyTo(bmp);
-                allocationA.destroy();
-                allocationB.destroy();
-                improveScript.destroy();
-                break;
-            case BLUR:
-                int filterSize = 11;
-                ScriptC_Convolution scriptC_gaussian = new ScriptC_Convolution(rs);
-
-                scriptC_gaussian.set_gIn(input);
-                scriptC_gaussian.set_gWidth(width);
-                scriptC_gaussian.set_gHeight(height);
-                scriptC_gaussian.set_gKernelSize(filterSize);
-
-                float[] coeffs = CreateMask.gaussian(filterSize, filterSize);
-                Allocation coeffs_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
-                coeffs_alloc.copyFrom(coeffs);
-
-                scriptC_gaussian.set_gCoeffs(coeffs_alloc);
-
-                scriptC_gaussian.forEach_root(output);
-                scriptC_gaussian.destroy();
-                output.copyTo(bmp);
-                break;
-            case LAPLACE:
-                filterSize = 3;
-                ScriptC_Convolution scriptC_laplace = new ScriptC_Convolution(rs);
-
-                scriptC_laplace.set_gIn(input);
-                scriptC_laplace.set_gWidth(width);
-                scriptC_laplace.set_gHeight(height);
-                scriptC_laplace.set_gKernelSize(filterSize);
-
-                float[] coeffs_laplace = {-1,-1,-1,-1,8,-1,-1,-1,-1};
-                Allocation coeffs__laplace_alloc = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
-                coeffs__laplace_alloc.copyFrom(coeffs_laplace);
-
-                scriptC_laplace.set_gCoeffs(coeffs__laplace_alloc);
-
-                scriptC_laplace.forEach_root(output);
-                scriptC_laplace.destroy();
-                output.copyTo(bmp);
-                break;
-            case SOBEL:
-                filterSize = 3;
-                ScriptC_sobel scriptC_sobel = new ScriptC_sobel(rs);
-
-                scriptC_sobel.set_gIn(input);
-                scriptC_sobel.set_gWidth(width);
-                scriptC_sobel.set_gHeight(height);
-                scriptC_sobel.set_gKernelSize(filterSize);
-
-                float[] coeffs_sobel_x = {-1,0,1,-2,0,2,-1,0,1};
-                float[] coeffs_sobel_y = {-1,-2,-1,0,0,0,1,2,1};
-                Allocation sobelKernelX = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
-                Allocation sobelKernelY = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
-                sobelKernelX.copyFrom(coeffs_sobel_x);
-                sobelKernelY.copyFrom(coeffs_sobel_y);
-
-                scriptC_sobel.set_gCoeffsX(sobelKernelX);
-                scriptC_sobel.set_gCoeffsY(sobelKernelY);
-                scriptC_sobel.forEach_root(output);
-
-                scriptC_sobel.destroy();
-                output.copyTo(bmp);
-                break;
-            case AVERAGE:
-                int filterSizeAverage = 5;
-                ScriptC_Convolution scriptC_average = new ScriptC_Convolution(rs);
-
-                scriptC_average.set_gIn(input);
-                scriptC_average.set_gWidth(width);
-                scriptC_average.set_gHeight(height);
-                scriptC_average.set_gKernelSize(filterSizeAverage);
-
-                float[] coeffs_average = CreateMask.averaging(filterSizeAverage);
-                Allocation coeffs__average_alloc = Allocation.createSized(rs, Element.F32(rs), filterSizeAverage*filterSizeAverage, Allocation.USAGE_SCRIPT);
-                coeffs__average_alloc.copyFrom(coeffs_average);
-
-                scriptC_average.set_gCoeffs(coeffs__average_alloc);
-
-                scriptC_average.forEach_root(output);
-                scriptC_average.destroy();
-                output.copyTo(bmp);
-                break;
-            case DRAWING:
-                ScriptC_gray grayScriptDrawing = new ScriptC_gray(rs);
-                Allocation temp = Allocation.createTyped(rs, output.getType());
-                grayScriptDrawing.forEach_toGray(input, temp);
-                grayScriptDrawing.destroy();
-
-                filterSize = 6;
-                ScriptC_drawing scriptC_drawing = new ScriptC_drawing(rs);
-
-                scriptC_drawing.set_gIn(temp);
-                scriptC_drawing.set_gWidth(width);
-                scriptC_drawing.set_gHeight(height);
-                scriptC_drawing.set_gKernelSize(filterSize);
-
-                float[] coeffs_drawing = {  1,1,1,1,1,1,
-                                            1,1,1,1,1,1,
-                                            1,1,-8,-8,1,1,
-                                            1,1,-8,-8,1,1,
-                                            1,1,1,1,1,1,
-                                            1,1,1,1,1,1};
-
-
-                //float[] coeffs_drawing = {1,1,1,1,-8,1,1,1,1};
-                for(int i = 0; i < coeffs_drawing.length; i++) {
-                    coeffs_drawing[i] /= 8;
-                }
-                Allocation coeffs_drawing_allocation = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
-                coeffs_drawing_allocation.copyFrom(coeffs_drawing);
-
-                scriptC_drawing.set_gCoeffs(coeffs_drawing_allocation);
-                scriptC_drawing.forEach_root(output);
-
-                scriptC_drawing.destroy();
-                output.copyTo(bmp);
-                break;
-            case NEGATIVE:
-                ScriptC_negative scriptC_negative = new ScriptC_negative(rs);
-                scriptC_negative.forEach_negative(input, output);
-                scriptC_negative.destroy();
-                output.copyTo(bmp);
-            default:
-                return;
-        }
-
-
-
-        input.destroy();
-        output.destroy();
-        rs.destroy();
-    }
-
-    /**
      * Applies the filter to a bitmap with a given value (used for the actual photo)
      * @param bmp the bitmap to apply the filter to
      * @param value the slider value which will be passed to the script
      */
-    void apply(Bitmap bmp, float value) {
+    void apply(Bitmap bmp, float value, boolean defaults) {
         int width = bmp.getWidth();
         int height = bmp.getHeight();
 
@@ -252,33 +61,32 @@ public class FilterRS {
                 break;
             case BRIGHTNESS:
                 ScriptC_brightness brightnessScript = new ScriptC_brightness(rs);
-                brightnessScript.invoke_setBright(value);
+                brightnessScript.invoke_setBright(defaults ? 150.f : value);
                 brightnessScript.forEach_brightness(input, output);
                 brightnessScript.destroy();
                 output.copyTo(bmp);
                 break;
             case TINT:
                 ScriptC_tint tintScript = new ScriptC_tint(rs);
-                tintScript.set_hue(value);
+                tintScript.set_hue(defaults ? new Random().nextFloat() * 359 : value);
                 tintScript.forEach_tint(input, output);
                 tintScript.destroy();
                 output.copyTo(bmp);
                 break;
             case ISOLATE:
                 ScriptC_isolate isolateScript = new ScriptC_isolate(rs);
-                isolateScript.set_hue(value);
+                isolateScript.set_hue(defaults ? 0.0f : value);
                 isolateScript.forEach_isolate(input, output);
                 isolateScript.destroy();
                 output.copyTo(bmp);
                 break;
             case CONTRAST:
                 ScriptC_contrast mScript = new ScriptC_contrast(rs);
-                mScript.invoke_setBright(value);
+                mScript.invoke_setBright(defaults ? 50.f : value);
                 mScript.forEach_contrast(input, output);
                 mScript.destroy();
                 output.copyTo(bmp);
                 break;
-
             case IMPROVE:
                 Allocation allocationA = Allocation.createFromBitmap(rs, bmp);
                 Allocation allocationB = Allocation.createTyped(rs, allocationA.getType());
@@ -294,14 +102,16 @@ public class FilterRS {
                 improveScript.destroy();
                 break;
             case BLUR:
-                //Convolution.ApplyConvolution(bmp, CreateMask.gaussien((int)value), 5);
                 int filterSize;
-                if((int) value % 2 == 0) {
-                    filterSize = (int) value + 1;
+                if(!defaults) {
+                    if ((int) value % 2 == 0) {
+                        filterSize = (int) value + 1;
+                    } else {
+                        filterSize = (int) value;
+                    }
                 } else {
-                    filterSize = (int) value;
+                    filterSize = 15;
                 }
-                //ScriptC_convolve scriptC_convolve = new ScriptC_convolve(rs);
                 ScriptC_Convolution scriptC_gaussian = new ScriptC_Convolution(rs);
 
                 scriptC_gaussian.set_gIn(input);
@@ -363,10 +173,14 @@ public class FilterRS {
                 break;
             case AVERAGE:
                 int filterSizeAverage;
-                if((int) value % 2 == 0) {
-                    filterSizeAverage = (int) value + 1;
+                if(!defaults) {
+                    if ((int) value % 2 == 0) {
+                        filterSizeAverage = (int) value + 1;
+                    } else {
+                        filterSizeAverage = (int) value;
+                    }
                 } else {
-                    filterSizeAverage = (int) value;
+                    filterSizeAverage = 3;
                 }
                 ScriptC_Convolution scriptC_average = new ScriptC_Convolution(rs);
 
@@ -409,7 +223,7 @@ public class FilterRS {
 
                 //float[] coeffs_drawing = {1,1,1,1,-8,1,1,1,1};
                 for(int i = 0; i < coeffs_drawing.length; i++) {
-                    coeffs_drawing[i] /= (11 - (int)value);
+                    coeffs_drawing[i] /= (11 - (defaults ? 8 : (int)value));
                 }
                 Allocation coeffs_drawing_allocation = Allocation.createSized(rs, Element.F32(rs), filterSize*filterSize, Allocation.USAGE_SCRIPT);
                 coeffs_drawing_allocation.copyFrom(coeffs_drawing);

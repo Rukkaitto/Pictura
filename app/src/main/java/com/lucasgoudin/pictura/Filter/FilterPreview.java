@@ -62,7 +62,7 @@ public class FilterPreview {
      * Applies the Renderscript filter to the preview image
      */
     private void applyFilter() {
-        filterRS.apply(bmp);
+        filterRS.apply(bmp,0, true);
     }
 
     /**

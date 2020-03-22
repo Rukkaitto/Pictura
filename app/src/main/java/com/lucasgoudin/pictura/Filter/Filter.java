@@ -50,7 +50,7 @@ public class Filter {
      * @param image the bitmap to apply the filter to
      */
     public void apply(Bitmap image) {
-        filterRS.apply(image, seekBarValue);
+        filterRS.apply(image, seekBarValue, false);
     }
 
     /**
