@@ -8,6 +8,7 @@ import com.lucasgoudin.pictura.ScriptC_brightness;
 import com.lucasgoudin.pictura.ScriptC_drawing;
 import com.lucasgoudin.pictura.ScriptC_gray;
 import com.lucasgoudin.pictura.ScriptC_isolate;
+import com.lucasgoudin.pictura.ScriptC_negative;
 import com.lucasgoudin.pictura.ScriptC_sobel;
 import com.lucasgoudin.pictura.ScriptC_tint;
 import com.lucasgoudin.pictura.ScriptC_contrast;
@@ -214,6 +215,11 @@ public class FilterRS {
                 scriptC_drawing.destroy();
                 output.copyTo(bmp);
                 break;
+            case NEGATIVE:
+                ScriptC_negative scriptC_negative = new ScriptC_negative(rs);
+                scriptC_negative.forEach_negative(input, output);
+                scriptC_negative.destroy();
+                output.copyTo(bmp);
             default:
                 return;
         }
@@ -414,6 +420,11 @@ public class FilterRS {
                 scriptC_drawing.destroy();
                 output.copyTo(bmp);
                 break;
+            case NEGATIVE:
+                ScriptC_negative scriptC_negative = new ScriptC_negative(rs);
+                scriptC_negative.forEach_negative(input, output);
+                scriptC_negative.destroy();
+                output.copyTo(bmp);
             default:
                 return;
         }

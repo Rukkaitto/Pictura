@@ -363,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
         TextView sobelBtn = findViewById(R.id.sobelBtn);
         TextView averageBtn = findViewById(R.id.averageBtn);
         TextView drawingBtn = findViewById(R.id.drawingBtn);
+        TextView negativeBtn = findViewById(R.id.negativeBtn);
 
         // Filters
         Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY, this)));
@@ -376,6 +377,7 @@ public class MainActivity extends AppCompatActivity {
         Filter sobel = new Filter(sobelBtn, new FilterPreview(image, new FilterRS(FilterName.SOBEL, this)));
         Filter average = new Filter(averageBtn, new FilterPreview(image, new FilterRS(FilterName.AVERAGE, this)), 5, 8);
         Filter drawing = new Filter(drawingBtn, new FilterPreview(image, new FilterRS(FilterName.DRAWING, this)), 1.f, 10.f);
+        Filter negative = new Filter(negativeBtn, new FilterPreview(image, new FilterRS(FilterName.NEGATIVE, this)));
 
         // Adds all the filters to the list
         filters = new ArrayList<>();
@@ -390,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
         filters.add(sobel);
         filters.add(average);
         filters.add(drawing);
+        filters.add(negative);
 
         for(final Filter filter : filters) {
             final TextView filterBtn = filter.getFilterBtn();

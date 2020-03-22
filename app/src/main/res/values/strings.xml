@@ -13,6 +13,7 @@
     <string name="laplace">Laplace</string>
     <string name="sobel">Sobel</string>
     <string name="drawing">Drawing</string>
+    <string name="negative">Negative</string>
 
 
     <!-- Button icons descriptions-->

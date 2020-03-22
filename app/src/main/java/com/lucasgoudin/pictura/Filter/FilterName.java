@@ -14,5 +14,6 @@ public enum FilterName {
     LAPLACE,
     SOBEL,
     AVERAGE,
-    DRAWING
+    DRAWING,
+    NEGATIVE,
 }

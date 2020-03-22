@@ -23,4 +23,5 @@
     <string name="average">Moyenneur</string>
     <string name="saving">Enregistrement...</string>
     <string name="drawing">Dessin</string>
+    <string name="negative">Négatif</string>
 </resources>
