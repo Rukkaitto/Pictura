@@ -5,4 +5,21 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="filterButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:clickable">true</item>
+        <item name="android:drawableTop">@mipmap/ic_launcher</item>
+        <item name="android:drawablePadding">@dimen/text_padding</item>
+        <item name="android:focusable">true</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">@dimen/icons_padding</item>
+        <item name="android:paddingRight">@dimen/icons_padding</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+
 </resources>

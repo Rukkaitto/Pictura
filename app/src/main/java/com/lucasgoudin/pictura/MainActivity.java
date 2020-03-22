@@ -23,9 +23,11 @@ import android.os.Bundle;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +37,8 @@ import com.lucasgoudin.pictura.Filter.Filter;
 import com.lucasgoudin.pictura.Filter.FilterName;
 import com.lucasgoudin.pictura.Filter.FilterRS;
 import com.lucasgoudin.pictura.Filter.FilterPreview;
+
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -352,18 +356,57 @@ public class MainActivity extends AppCompatActivity {
      */
     private void makeFilters() {
         // Filter buttons
-        TextView toGrayBtn = findViewById(R.id.toGrayBtn);
-        TextView brightnessBtn = findViewById(R.id.brightnessBtn);
-        TextView contrastBtn = findViewById(R.id.contrastBtn);
-        TextView improveBtn = findViewById(R.id.improveBtn);
-        TextView tintBtn = findViewById(R.id.tintBtn);
-        TextView isolateBtn = findViewById(R.id.isolateBtn);
-        TextView blurBtn = findViewById(R.id.blurBtn);
-        TextView laplaceBtn = findViewById(R.id.laplaceBtn);
-        TextView sobelBtn = findViewById(R.id.sobelBtn);
-        TextView averageBtn = findViewById(R.id.averageBtn);
-        TextView drawingBtn = findViewById(R.id.drawingBtn);
-        TextView negativeBtn = findViewById(R.id.negativeBtn);
+        ContextThemeWrapper newContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
+
+        TextView toGrayBtn = new TextView(newContext);
+        toGrayBtn.setText(R.string.toGray);
+
+        TextView brightnessBtn = new TextView(newContext);
+        brightnessBtn.setText(R.string.brightness);
+
+        TextView contrastBtn = new TextView(newContext);
+        contrastBtn.setText(R.string.contrast);
+
+        TextView improveBtn = new TextView(newContext);
+        improveBtn.setText(R.string.improve);
+
+        TextView tintBtn = new TextView(newContext);
+        tintBtn.setText(R.string.tint);
+
+        TextView isolateBtn = new TextView(newContext);
+        isolateBtn.setText(R.string.isolate);
+
+        TextView blurBtn = new TextView(newContext);
+        blurBtn.setText(R.string.blur);
+
+        TextView laplaceBtn = new TextView(newContext);
+        laplaceBtn.setText(R.string.laplace);
+
+        TextView sobelBtn = new TextView(newContext);
+        sobelBtn.setText(R.string.sobel);
+
+        TextView averageBtn = new TextView(newContext);
+        averageBtn.setText(R.string.average);
+
+        TextView drawingBtn = new TextView(newContext);
+        drawingBtn.setText(R.string.drawing);
+
+        TextView negativeBtn = new TextView(newContext);
+        negativeBtn.setText(R.string.negative);
+
+        LinearLayout filtersLayout = findViewById(R.id.linearLayout);
+        filtersLayout.addView(toGrayBtn);
+        filtersLayout.addView(brightnessBtn);
+        filtersLayout.addView(contrastBtn);
+        filtersLayout.addView(improveBtn);
+        filtersLayout.addView(tintBtn);
+        filtersLayout.addView(isolateBtn);
+        filtersLayout.addView(blurBtn);
+        filtersLayout.addView(laplaceBtn);
+        filtersLayout.addView(sobelBtn);
+        filtersLayout.addView(averageBtn);
+        filtersLayout.addView(drawingBtn);
+        filtersLayout.addView(negativeBtn);
 
         // Filters
         Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY, this)));
