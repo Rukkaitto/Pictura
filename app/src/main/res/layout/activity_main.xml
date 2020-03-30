@@ -45,14 +45,11 @@
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_width="0dp"
+        android:layout_width="351dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="10dp"
         android:max="100"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/filters"
+        app:layout_constraintBottom_toTopOf="@+id/tabs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -143,16 +140,56 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:baselineAligned="false"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:orientation="horizontal"
             android:scrollbarAlwaysDrawHorizontalTrack="false"
             android:scrollbarAlwaysDrawVerticalTrack="false"
             android:scrollbarSize="4dp"
-            android:showDividers="middle">
-        </LinearLayout>
+            android:showDividers="middle"/>
+
     </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/tabs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/filters"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/filtersTab"
+            style="@style/tab_button"
+            android:text="@string/filtersTab" />
+
+        <Button
+            android:id="@+id/stickersTab"
+            style="@style/tab_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/stickersTab" />
+
+        <Button
+            android:id="@+id/textTab"
+            style="@style/tab_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/textTab" />
+
+        <Button
+            android:id="@+id/brushTab"
+            style="@style/tab_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/brushTab" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

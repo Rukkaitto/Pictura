@@ -22,4 +22,20 @@
         <item name="android:textSize">@dimen/text_size</item>
     </style>
 
+    <style name="tab_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:background">@drawable/rounded_button</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">70dp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
 </resources>

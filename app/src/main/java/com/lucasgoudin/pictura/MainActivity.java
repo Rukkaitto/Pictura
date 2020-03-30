@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     SeekBar seekBar;
     String currentPhotoPath;
     TextView noPhotoMessage;
+    LinearLayout tabs;
 
     int OPEN_GALLERY = 1;
     int OPEN_CAMERA = 2;
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         updatePreviews();
 
         filterScrollView = findViewById(R.id.filters);
+        tabs = findViewById(R.id.tabs);
+        tabs.setVisibility(View.INVISIBLE);
         noPhotoMessage = findViewById(R.id.noPhotoMessage);
         filterScrollView.setVisibility(View.INVISIBLE);
         photoView.setVisibility(View.INVISIBLE);
@@ -579,6 +582,7 @@ public class MainActivity extends AppCompatActivity {
         if((requestCode == OPEN_GALLERY || requestCode == OPEN_CAMERA) && resultCode == RESULT_OK) {
             filterScrollView.setVisibility(View.VISIBLE);
             photoView.setVisibility(View.VISIBLE);
+            tabs.setVisibility(View.VISIBLE);
             noPhotoMessage.setVisibility(View.INVISIBLE);
         }
     }

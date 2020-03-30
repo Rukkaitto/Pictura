@@ -24,4 +24,8 @@
     <string name="saving">Enregistrement...</string>
     <string name="drawing">Dessin</string>
     <string name="negative">Négatif</string>
+    <string name="filtersTab">Filtres</string>
+    <string name="stickersTab">Stickers</string>
+    <string name="textTab">Texte</string>
+    <string name="brushTab">Pinceaux</string>
 </resources>

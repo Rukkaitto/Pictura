@@ -31,5 +31,12 @@
     <string name="saveNoFilter">Please apply a filter before saving</string>
     <string name="shareNoFilter">Please apply a filter before sharing</string>
 
+    <!-- Tab titles -->
+
+    <string name="filtersTab">Filters</string>
+    <string name="stickersTab">Stickers</string>
+    <string name="textTab">Text</string>
+    <string name="brushTab">Brushes</string>
+
 
 </resources>
