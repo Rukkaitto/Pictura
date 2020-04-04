@@ -137,18 +137,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:baselineAligned="false"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:scrollbarAlwaysDrawHorizontalTrack="false"
-            android:scrollbarAlwaysDrawVerticalTrack="false"
-            android:scrollbarSize="4dp"
-            android:showDividers="middle"/>
+<!--        <LinearLayout-->
+<!--            android:id="@+id/linearLayout"-->
+<!--            style="@style/button_layout" />-->
 
     </HorizontalScrollView>
 

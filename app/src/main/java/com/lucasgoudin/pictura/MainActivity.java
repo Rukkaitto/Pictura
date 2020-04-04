@@ -25,6 +25,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -61,13 +62,22 @@ public class MainActivity extends AppCompatActivity {
     Bitmap image, base_image, full_image;
     ImageButton saveBtn, shareBtn, loadBtn, cameraBtn, resetBtn;
     PhotoView photoView;
-    HorizontalScrollView filterScrollView;
+    HorizontalScrollView scrollView;
     ArrayList<Filter> filters;
     Filter selectedFilter;
     SeekBar seekBar;
     String currentPhotoPath;
     TextView noPhotoMessage;
-    LinearLayout tabs;
+    LinearLayout tabsLayout;
+
+    LinearLayout filtersTabContent, stickersTabContent, textTabContent, brushesTabContent;
+    ArrayList<LinearLayout> tabsContent;
+
+    enum tabId {
+        FILTERS, STICKERS, TEXT, BRUSHES
+    }
+    Button filtersTab, stickersTab, textTab, brushTab;
+    ArrayList<Button> tabs;
 
     int OPEN_GALLERY = 1;
     int OPEN_CAMERA = 2;
@@ -82,16 +92,92 @@ public class MainActivity extends AppCompatActivity {
         initializeButtons();
         initializeSeekBar();
 
-        makeFilters();
-        updatePreviews();
-
-        filterScrollView = findViewById(R.id.filters);
-        tabs = findViewById(R.id.tabs);
-        tabs.setVisibility(View.INVISIBLE);
+        scrollView = findViewById(R.id.filters);
+        tabsLayout = findViewById(R.id.tabs);
+        tabsLayout.setVisibility(View.INVISIBLE);
         noPhotoMessage = findViewById(R.id.noPhotoMessage);
-        filterScrollView.setVisibility(View.INVISIBLE);
+        scrollView.setVisibility(View.INVISIBLE);
         photoView.setVisibility(View.INVISIBLE);
 
+        initializeTabs();
+        makeFilters();
+        makeStickers();
+        makeTexts();
+        makeBrushes();
+        updatePreviews();
+
+    }
+
+    private void initializeTabs() {
+        tabsContent = new ArrayList<LinearLayout>();
+
+        filtersTab = findViewById(R.id.filtersTab);
+        setListener(filtersTab, tabId.FILTERS);
+        stickersTab = findViewById(R.id.stickersTab);
+        setListener(stickersTab, tabId.STICKERS);
+        textTab = findViewById(R.id.textTab);
+        setListener(textTab, tabId.TEXT);
+        brushTab = findViewById(R.id.brushTab);
+        setListener(brushTab, tabId.BRUSHES);
+
+        tabs = new ArrayList<Button>();
+        tabs.add(filtersTab);
+        tabs.add(stickersTab);
+        tabs.add(textTab);
+        tabs.add(brushTab);
+
+        ContextThemeWrapper layoutContext = new ContextThemeWrapper(this, R.style.button_layout);
+
+        filtersTabContent = new LinearLayout(layoutContext);
+        tabsContent.add(filtersTabContent);
+
+        stickersTabContent = new LinearLayout(layoutContext);
+        tabsContent.add(stickersTabContent);
+
+        textTabContent = new LinearLayout(layoutContext);
+        tabsContent.add(textTabContent);
+
+        brushesTabContent = new LinearLayout(layoutContext);
+        tabsContent.add(brushesTabContent);
+
+
+        scrollView.addView(filtersTabContent);
+
+        for(final Button otherTab : tabs) {
+            otherTab.setTextColor(Color.parseColor("#C5C5C5"));
+        }
+        filtersTab.setTextColor(Color.WHITE);
+    }
+
+    private void setListener(final Button tab, final tabId id) {
+        tab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(final Button otherTab : tabs) {
+                    otherTab.setTextColor(Color.parseColor("#C5C5C5"));
+                }
+                tab.setTextColor(Color.WHITE);
+
+                switch (id) {
+                    case FILTERS:
+                        scrollView.removeAllViews();
+                        scrollView.addView(filtersTabContent);
+                        break;
+                    case STICKERS:
+                        scrollView.removeAllViews();
+                        scrollView.addView(stickersTabContent);
+                        break;
+                    case TEXT:
+                        scrollView.removeAllViews();
+                        scrollView.addView(textTabContent);
+                        break;
+                    case BRUSHES:
+                        scrollView.removeAllViews();
+                        scrollView.addView(brushesTabContent);
+                        break;
+                }
+            }
+        });
     }
 
     /**
@@ -354,62 +440,64 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     /**
      * Creates the filters, with their invividual seekbar limits and their associated buttons
      */
     private void makeFilters() {
         // Filter buttons
-        ContextThemeWrapper newContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
+        ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
 
-        TextView toGrayBtn = new TextView(newContext);
+        TextView toGrayBtn = new TextView(buttonContext);
         toGrayBtn.setText(R.string.toGray);
 
-        TextView brightnessBtn = new TextView(newContext);
+        TextView brightnessBtn = new TextView(buttonContext);
         brightnessBtn.setText(R.string.brightness);
 
-        TextView contrastBtn = new TextView(newContext);
+        TextView contrastBtn = new TextView(buttonContext);
         contrastBtn.setText(R.string.contrast);
 
-        TextView improveBtn = new TextView(newContext);
+        TextView improveBtn = new TextView(buttonContext);
         improveBtn.setText(R.string.improve);
 
-        TextView tintBtn = new TextView(newContext);
+        TextView tintBtn = new TextView(buttonContext);
         tintBtn.setText(R.string.tint);
 
-        TextView isolateBtn = new TextView(newContext);
+        TextView isolateBtn = new TextView(buttonContext);
         isolateBtn.setText(R.string.isolate);
 
-        TextView blurBtn = new TextView(newContext);
+        TextView blurBtn = new TextView(buttonContext);
         blurBtn.setText(R.string.blur);
 
-        TextView laplaceBtn = new TextView(newContext);
+        TextView laplaceBtn = new TextView(buttonContext);
         laplaceBtn.setText(R.string.laplace);
 
-        TextView sobelBtn = new TextView(newContext);
+        TextView sobelBtn = new TextView(buttonContext);
         sobelBtn.setText(R.string.sobel);
 
-        TextView averageBtn = new TextView(newContext);
+        TextView averageBtn = new TextView(buttonContext);
         averageBtn.setText(R.string.average);
 
-        TextView drawingBtn = new TextView(newContext);
+        TextView drawingBtn = new TextView(buttonContext);
         drawingBtn.setText(R.string.drawing);
 
-        TextView negativeBtn = new TextView(newContext);
+        TextView negativeBtn = new TextView(buttonContext);
         negativeBtn.setText(R.string.negative);
 
-        LinearLayout filtersLayout = findViewById(R.id.linearLayout);
-        filtersLayout.addView(toGrayBtn);
-        filtersLayout.addView(brightnessBtn);
-        filtersLayout.addView(contrastBtn);
-        filtersLayout.addView(improveBtn);
-        filtersLayout.addView(tintBtn);
-        filtersLayout.addView(isolateBtn);
-        filtersLayout.addView(blurBtn);
-        filtersLayout.addView(laplaceBtn);
-        filtersLayout.addView(sobelBtn);
-        filtersLayout.addView(averageBtn);
-        filtersLayout.addView(drawingBtn);
-        filtersLayout.addView(negativeBtn);
+
+        filtersTabContent.addView(toGrayBtn);
+        filtersTabContent.addView(brightnessBtn);
+        filtersTabContent.addView(contrastBtn);
+        filtersTabContent.addView(improveBtn);
+        filtersTabContent.addView(tintBtn);
+        filtersTabContent.addView(isolateBtn);
+        filtersTabContent.addView(blurBtn);
+        filtersTabContent.addView(laplaceBtn);
+        filtersTabContent.addView(sobelBtn);
+        filtersTabContent.addView(averageBtn);
+        filtersTabContent.addView(drawingBtn);
+        filtersTabContent.addView(negativeBtn);
 
         // Filters
         Filter toGray = new Filter(toGrayBtn, new FilterPreview(image, new FilterRS(FilterName.TOGRAY, this)));
@@ -466,6 +554,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void makeStickers() {
+        //TODO: implement stickers
+    }
+
+    private void makeTexts() {
+        //TODO: implement texts
+    }
+
+    private void makeBrushes() {
+        //TODO: implement brushes
     }
 
     /**
@@ -580,9 +680,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if((requestCode == OPEN_GALLERY || requestCode == OPEN_CAMERA) && resultCode == RESULT_OK) {
-            filterScrollView.setVisibility(View.VISIBLE);
+            scrollView.setVisibility(View.VISIBLE);
             photoView.setVisibility(View.VISIBLE);
-            tabs.setVisibility(View.VISIBLE);
+            tabsLayout.setVisibility(View.VISIBLE);
             noPhotoMessage.setVisibility(View.INVISIBLE);
         }
     }
