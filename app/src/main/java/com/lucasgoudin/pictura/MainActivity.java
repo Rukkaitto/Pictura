@@ -12,11 +12,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.icu.util.Output;
 import android.media.ExifInterface;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,12 +33,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.PhotoView;
+import com.lucasgoudin.pictura.Filter.DrawSticker;
 import com.lucasgoudin.pictura.Filter.Filter;
 import com.lucasgoudin.pictura.Filter.FilterName;
 import com.lucasgoudin.pictura.Filter.FilterRS;
 import com.lucasgoudin.pictura.Filter.FilterPreview;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -52,7 +50,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
 /**
  * The main Activity
@@ -69,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     String currentPhotoPath;
     TextView noPhotoMessage;
     LinearLayout tabsLayout;
+
+    ArrayList<Canvas> canvasTab = new ArrayList<>();
 
     LinearLayout filtersTabContent, stickersTabContent, textTabContent, brushesTabContent;
     ArrayList<LinearLayout> tabsContent;
@@ -561,11 +560,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void makeTexts() {
-        //TODO: implement texts
+        // Filter buttons
+        ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
+
+        TextView writeBtn = new TextView(buttonContext);
+        writeBtn.setText(R.string.textTab);
+
+        textTabContent.addView(writeBtn);
+
+        writeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 
     private void makeBrushes() {
-        //TODO: implement brushes
+        // Filter buttons
+        ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
+
+        TextView leadBtn = new TextView(buttonContext);
+        leadBtn.setText("Feuille");
+
+        stickersTabContent.addView(leadBtn);
+
+        leadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //DrawSticker ds = new DrawSticker(MainActivity.this, image);
+                //setContentView(ds);
+            }
+        });
     }
 
     /**

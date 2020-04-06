@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/app/ApplicationAndroid-Pictura-app.iml" filepath="$PROJECT_DIR$/app/ApplicationAndroid-Pictura-app.iml" group="Pictura/app" />
       <module fileurl="file://$PROJECT_DIR$/Pictura.iml" filepath="$PROJECT_DIR$/Pictura.iml" group="Pictura" />
       <module fileurl="file://$PROJECT_DIR$/app/Pictura-app.iml" filepath="$PROJECT_DIR$/app/Pictura-app.iml" group="Pictura/app" />
       <module fileurl="file://$PROJECT_DIR$/StudioProjects-Pictura.iml" filepath="$PROJECT_DIR$/StudioProjects-Pictura.iml" group="Pictura" />
