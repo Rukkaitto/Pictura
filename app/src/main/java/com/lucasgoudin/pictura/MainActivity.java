@@ -33,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.PhotoView;
-import com.lucasgoudin.pictura.Filter.DrawSticker;
 import com.lucasgoudin.pictura.Filter.Filter;
 import com.lucasgoudin.pictura.Filter.FilterName;
 import com.lucasgoudin.pictura.Filter.FilterRS;
@@ -556,7 +555,361 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void makeStickers() {
-        //TODO: implement stickers
+        // Filter buttons
+        ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
+
+        final TextView leafBtn = new TextView(buttonContext);
+        leafBtn.setText("Feuille");
+
+        final TextView cat1Btn = new TextView(buttonContext);
+        cat1Btn.setText("Chat roux");
+
+        TextView cat2Btn = new TextView(buttonContext);
+        cat2Btn.setText("Chat gris");
+
+        TextView cat3Btn = new TextView(buttonContext);
+        cat3Btn.setText("Chatte grise");
+
+        TextView ceriseBtn = new TextView(buttonContext);
+        ceriseBtn.setText("Cerise");
+
+        TextView clemenceauBtn = new TextView(buttonContext);
+        clemenceauBtn.setText("Clemenceau");
+
+        TextView cloudBtn = new TextView(buttonContext);
+        cloudBtn.setText("Nuage");
+
+        TextView crown1Btn = new TextView(buttonContext);
+        crown1Btn.setText("Couronne");
+
+        TextView crown2Btn = new TextView(buttonContext);
+        crown2Btn.setText("Couronne grise");
+
+        TextView donutBtn = new TextView(buttonContext);
+        donutBtn.setText("Donut");
+
+        TextView eggBtn = new TextView(buttonContext);
+        eggBtn.setText("Oeuf");
+
+        TextView fraiseBtn = new TextView(buttonContext);
+        fraiseBtn.setText("Fraise");
+
+        TextView heartBtn = new TextView(buttonContext);
+        heartBtn.setText("Coeur");
+
+        TextView bunnyBtn = new TextView(buttonContext);
+        bunnyBtn.setText("Lapin");
+
+        TextView meliBtn = new TextView(buttonContext);
+        meliBtn.setText("Méli");
+
+        TextView appleBtn = new TextView(buttonContext);
+        appleBtn.setText("Pomme");
+
+        TextView chickenBtn = new TextView(buttonContext);
+        chickenBtn.setText("Poulet");
+
+        TextView octopusBtn = new TextView(buttonContext);
+        octopusBtn.setText("Poulpe");
+
+        TextView sunBtn = new TextView(buttonContext);
+        sunBtn.setText("Soleil");
+
+        TextView sweetBtn = new TextView(buttonContext);
+        sweetBtn.setText("Bonbon");
+
+        TextView pieBtn = new TextView(buttonContext);
+        pieBtn.setText("Tarte");
+
+
+        stickersTabContent.addView(leafBtn);
+        stickersTabContent.addView(cat1Btn);
+        stickersTabContent.addView(cat2Btn);
+        stickersTabContent.addView(cat3Btn);
+        stickersTabContent.addView(ceriseBtn);
+        stickersTabContent.addView(clemenceauBtn);
+        stickersTabContent.addView(cloudBtn);
+        stickersTabContent.addView(crown1Btn);
+        stickersTabContent.addView(crown2Btn);
+        stickersTabContent.addView(donutBtn);
+        stickersTabContent.addView(eggBtn);
+        stickersTabContent.addView(fraiseBtn);
+        stickersTabContent.addView(heartBtn);
+        stickersTabContent.addView(bunnyBtn);
+        stickersTabContent.addView(meliBtn);
+        stickersTabContent.addView(appleBtn);
+        stickersTabContent.addView(chickenBtn);
+        stickersTabContent.addView(octopusBtn);
+        stickersTabContent.addView(sunBtn);
+        stickersTabContent.addView(sweetBtn);
+        stickersTabContent.addView(pieBtn);
+
+        leafBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("leaf");
+            }
+        });
+
+        cat1Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("cat1");
+            }
+        });
+
+        cat2Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("cat2");
+            }
+        });
+
+        cat3Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("cat3");
+            }
+        });
+
+        ceriseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("cerise");
+            }
+        });
+
+        clemenceauBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("clemenceau");
+            }
+        });
+
+        cloudBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("cloud");
+            }
+        });
+
+        crown1Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("crown1");
+            }
+        });
+
+        crown2Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("crown2");
+            }
+        });
+
+        donutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("donut");
+            }
+        });
+
+        eggBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("egg");
+            }
+        });
+
+        fraiseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("fraise");
+            }
+        });
+
+        heartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("heart");
+            }
+        });
+
+        bunnyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("bunny");
+            }
+        });
+
+        meliBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("meli");
+            }
+        });
+
+        appleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("apple");
+            }
+        });
+
+        chickenBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("chicken");
+            }
+        });
+
+        octopusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("octopus");
+            }
+        });
+
+        sunBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("sun");
+            }
+        });
+
+        sweetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("sweet");
+            }
+        });
+
+        pieBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProcessingBitmap("pie");
+            }
+        });
+
+
+
+    }
+
+    private void ProcessingBitmap(String nameSticker) {
+        int x = 0, y = 0;
+
+        // Make the image mutable
+        android.graphics.Bitmap.Config bitmapConfig = image.getConfig();
+        if(bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        image = image.copy(bitmapConfig, true);
+
+        // Make the sticker mutable
+        Bitmap sticker = selectSticker(nameSticker);
+
+        android.graphics.Bitmap.Config bitmapConfigSticker = sticker.getConfig();
+        if(bitmapConfigSticker == null) {
+            bitmapConfigSticker = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        sticker = sticker.copy(bitmapConfigSticker, true);
+
+        // Random size of the sticker
+        if(sticker.getWidth() < sticker.getHeight()){
+            int tmp = sticker.getHeight();
+            y = ((int) (Math.random() * (sticker.getHeight())));
+            x = ((sticker.getWidth() * y) / tmp);
+        } else if(sticker.getWidth() > sticker.getHeight()){
+            int tmp = sticker.getWidth();
+            x = (int) (Math.random() * (sticker.getWidth()));
+            y = ((x * sticker.getHeight()) / tmp);
+        }
+
+        sticker = Bitmap.createScaledBitmap(sticker,x,y,false);
+
+        // Fusion of the image with the sticker
+        Bitmap fusion = Bitmap.createBitmap(image.getWidth(), image.getHeight(), bitmapConfig);
+
+        Canvas canvas = new Canvas();
+        canvas.setBitmap(fusion);
+        canvas.drawBitmap(image, new Matrix(), null);
+        canvas.drawBitmap(sticker, (int) (Math.random() * (image.getWidth() - sticker.getWidth())), (int)  (Math.random() * (image.getHeight() - sticker.getHeight())), null);
+        image = fusion;
+
+        updateImage();
+
+    }
+
+    private Bitmap selectSticker(String sticker) {
+        Bitmap stickerBmp = Bitmap.createBitmap(image.getWidth() ,image.getHeight(), android.graphics.Bitmap.Config.ARGB_8888);
+        switch(sticker){
+            case "leaf" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.leaf);
+                break;
+            case "cat1" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.cat1);
+                break;
+            case "cat2" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.cat2);
+                break;
+            case "cat3" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.cat3);
+                break;
+            case "cerise" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.cerise);
+                break;
+            case "clemenceau" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.clemenceau);
+                break;
+            case "cloud" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.cloud);
+                break;
+            case "crown1" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.crown1);
+                break;
+            case "crown2" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.crown2);
+                break;
+            case "donut" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.donut);
+                break;
+            case "egg" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.egg);
+                break;
+            case "fraise" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.fraise);
+                break;
+            case "heart" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.heart);
+                break;
+            case "bunny" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.lapin);
+                break;
+            case "meli" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.meli);
+                break;
+            case "apple" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.pomme);
+                break;
+            case "chicken" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.poulet);
+                break;
+            case "octopus" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.poulpe);
+                break;
+            case "sun" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.soleil);
+                break;
+            case "sweet" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.sweet);
+                break;
+            case "pie" :
+                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.tarte);
+                break;
+            default :
+                break;
+        }
+        return stickerBmp;
     }
 
     private void makeTexts() {
@@ -578,21 +931,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void makeBrushes() {
-        // Filter buttons
-        ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
-
-        TextView leadBtn = new TextView(buttonContext);
-        leadBtn.setText("Feuille");
-
-        stickersTabContent.addView(leadBtn);
-
-        leadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //DrawSticker ds = new DrawSticker(MainActivity.this, image);
-                //setContentView(ds);
-            }
-        });
+        // TODO : makeBrushes
     }
 
     /**
