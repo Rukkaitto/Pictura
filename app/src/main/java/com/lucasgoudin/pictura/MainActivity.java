@@ -16,6 +16,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.mtp.MtpConstants;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         initializeTabs();
         makeFilters();
         makeStickers();
-        makeTexts();
+        makeFrames();
         makeBrushes();
         updatePreviews();
 
@@ -912,22 +913,67 @@ public class MainActivity extends AppCompatActivity {
         return stickerBmp;
     }
 
-    private void makeTexts() {
+    private void makeFrames() {
         // Filter buttons
         ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
 
-        TextView writeBtn = new TextView(buttonContext);
-        writeBtn.setText(R.string.textTab);
+        TextView frame1Btn = new TextView(buttonContext);
+        frame1Btn.setText("Cadre n°1");
 
-        textTabContent.addView(writeBtn);
+        textTabContent.addView(frame1Btn);
 
-        writeBtn.setOnClickListener(new View.OnClickListener() {
+        frame1Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                setFrame("frame1");
             }
         });
 
+    }
+
+    private void setFrame(String nameFrame) {
+        int x = 0, y = 0;
+
+        // Make the image mutable
+        android.graphics.Bitmap.Config bitmapConfig = image.getConfig();
+        if(bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        image = image.copy(bitmapConfig, true);
+
+        // Make the frame mutable
+        Bitmap frame = selectFrame(nameFrame);
+
+        android.graphics.Bitmap.Config bitmapConfigSticker = frame.getConfig();
+        if(bitmapConfigSticker == null) {
+            bitmapConfigSticker = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        frame = frame.copy(bitmapConfigSticker, true);
+
+        frame = Bitmap.createScaledBitmap(frame,image.getWidth(),image.getHeight(),false);
+
+        // Fusion of the image with the sticker
+        Bitmap fusion = Bitmap.createBitmap(image.getWidth(), image.getHeight(), bitmapConfig);
+
+        Canvas canvas = new Canvas();
+        canvas.setBitmap(fusion);
+        canvas.drawBitmap(image, new Matrix(), null);
+        canvas.drawBitmap(frame, new Matrix(), null);
+        image = fusion;
+
+        updateImage();
+    }
+
+    private Bitmap selectFrame(String frame){
+        Bitmap frameBmp = Bitmap.createBitmap(image.getWidth() ,image.getHeight(), android.graphics.Bitmap.Config.ARGB_8888);
+        switch(frame){
+            case "frame1" :
+                frameBmp = BitmapFactory.decodeResource(this.getResources(), R.drawable.frame1);
+                break;
+            default :
+                break;
+        }
+        return frameBmp;
     }
 
     private void makeBrushes() {
