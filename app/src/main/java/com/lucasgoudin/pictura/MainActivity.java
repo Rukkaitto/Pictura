@@ -253,7 +253,9 @@ public class MainActivity extends AppCompatActivity {
         if(photoFile != null) {
             // Converts the full resolution bitmap to a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            selectedFilter.apply(full_image);
+            if(selectedFilter != null) {
+                selectedFilter.apply(full_image);
+            }
             // JPEG compression
             full_image.compress(Bitmap.CompressFormat.JPEG, 90, bos);
             byte[] bitmapData = bos.toByteArray();
@@ -333,11 +335,7 @@ public class MainActivity extends AppCompatActivity {
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(selectedFilter != null) {
-                    share();
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.shareNoFilter, Toast.LENGTH_LONG).show();
-                }
+                share();
             }
         });
 
@@ -360,11 +358,7 @@ public class MainActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(selectedFilter != null) {
-                    save();
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.saveNoFilter, Toast.LENGTH_LONG).show();
-                }
+                save();
             }
         });
 
@@ -830,12 +824,21 @@ public class MainActivity extends AppCompatActivity {
 
         // Fusion of the image with the sticker
         Bitmap fusion = Bitmap.createBitmap(image.getWidth(), image.getHeight(), bitmapConfig);
+        Bitmap full_fusion = Bitmap.createBitmap(full_image.getWidth(), full_image.getHeight(), bitmapConfig);
 
         Canvas canvas = new Canvas();
         canvas.setBitmap(fusion);
         canvas.drawBitmap(image, new Matrix(), null);
         canvas.drawBitmap(sticker, (int) (Math.random() * (image.getWidth() - sticker.getWidth())), (int)  (Math.random() * (image.getHeight() - sticker.getHeight())), null);
+
+        Canvas canvas2 = new Canvas();
+        canvas2.setBitmap(full_fusion);
+        canvas2.drawBitmap(full_image, new Matrix(), null);
+        canvas2.drawBitmap(sticker, (int) (Math.random() * (full_image.getWidth() - sticker.getWidth())), (int)  (Math.random() * (full_image.getHeight() - sticker.getHeight())), null);
+
         image = fusion;
+        full_image = full_fusion;
+
 
         updateImage();
 
@@ -1157,7 +1160,9 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == SAVE_IMAGE) {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Bitmap full_image_result = full_image.copy(full_image.getConfig(), true);
-                selectedFilter.apply(full_image_result);
+                if(selectedFilter != null) {
+                    selectedFilter.apply(full_image_result);
+                }
                 saveImage(full_image_result, getResources().getString(R.string.app_name));
                 Toast.makeText(getApplicationContext(), R.string.savedMessage, Toast.LENGTH_LONG).show();
             } else {
