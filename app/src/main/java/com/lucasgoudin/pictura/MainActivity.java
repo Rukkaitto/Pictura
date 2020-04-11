@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import android.Manifest;
 import android.content.ContentValues;
@@ -15,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.mtp.MtpConstants;
 import android.net.Uri;
@@ -23,6 +26,7 @@ import android.os.Bundle;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextWatcher;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +42,7 @@ import com.lucasgoudin.pictura.Filter.Filter;
 import com.lucasgoudin.pictura.Filter.FilterName;
 import com.lucasgoudin.pictura.Filter.FilterRS;
 import com.lucasgoudin.pictura.Filter.FilterPreview;
+import com.lucasgoudin.pictura.Filter.MakeSticker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -67,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
     TextView noPhotoMessage;
     LinearLayout tabsLayout;
 
-    ArrayList<Canvas> canvasTab = new ArrayList<>();
+    ArrayList<TextView> stickersBtn;
+    MakeSticker createSticker;
 
     LinearLayout filtersTabContent, stickersTabContent, textTabContent, brushesTabContent;
     ArrayList<LinearLayout> tabsContent;
@@ -547,6 +553,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
     }
 
     private void makeStickers() {
@@ -616,7 +623,6 @@ public class MainActivity extends AppCompatActivity {
         TextView pieBtn = new TextView(buttonContext);
         pieBtn.setText("Tarte");
 
-
         stickersTabContent.addView(leafBtn);
         stickersTabContent.addView(cat1Btn);
         stickersTabContent.addView(cat2Btn);
@@ -638,6 +644,53 @@ public class MainActivity extends AppCompatActivity {
         stickersTabContent.addView(sunBtn);
         stickersTabContent.addView(sweetBtn);
         stickersTabContent.addView(pieBtn);
+
+        stickersBtn = new ArrayList<>();
+        stickersBtn.add(leafBtn);
+        stickersBtn.add(cat1Btn);
+        stickersBtn.add(cat2Btn);
+        stickersBtn.add(cat3Btn);
+        stickersBtn.add(ceriseBtn);
+        stickersBtn.add(clemenceauBtn);
+        stickersBtn.add(cloudBtn);
+        stickersBtn.add(crown1Btn);
+        stickersBtn.add(crown2Btn);
+        stickersBtn.add(donutBtn);
+        stickersBtn.add(eggBtn);
+        stickersBtn.add(fraiseBtn);
+        stickersBtn.add(heartBtn);
+        stickersBtn.add(bunnyBtn);
+        stickersBtn.add(meliBtn);
+        stickersBtn.add(appleBtn);
+        stickersBtn.add(chickenBtn);
+        stickersBtn.add(octopusBtn);
+        stickersBtn.add(sunBtn);
+        stickersBtn.add(sweetBtn);
+        stickersBtn.add(pieBtn);
+
+        createSticker = new MakeSticker(this, image, full_image);
+
+        createSticker.stickerPreview(leafBtn, BitmapFactory.decodeResource(getResources(), R.drawable.leaf));
+        createSticker.stickerPreview(cat1Btn, BitmapFactory.decodeResource(getResources(), R.drawable.cat1));
+        createSticker.stickerPreview(cat2Btn, BitmapFactory.decodeResource(getResources(), R.drawable.cat2));
+        createSticker.stickerPreview(cat3Btn, BitmapFactory.decodeResource(getResources(), R.drawable.cat3));
+        createSticker.stickerPreview(ceriseBtn, BitmapFactory.decodeResource(getResources(), R.drawable.cherry));
+        createSticker.stickerPreview(clemenceauBtn, BitmapFactory.decodeResource(getResources(), R.drawable.clemenceau));
+        createSticker.stickerPreview(cloudBtn, BitmapFactory.decodeResource(getResources(), R.drawable.cloud));
+        createSticker.stickerPreview(crown1Btn, BitmapFactory.decodeResource(getResources(), R.drawable.crown1));
+        createSticker.stickerPreview(crown2Btn, BitmapFactory.decodeResource(getResources(), R.drawable.crown2));
+        createSticker.stickerPreview(donutBtn, BitmapFactory.decodeResource(getResources(), R.drawable.donut));
+        createSticker.stickerPreview(eggBtn, BitmapFactory.decodeResource(getResources(), R.drawable.egg));
+        createSticker.stickerPreview(fraiseBtn, BitmapFactory.decodeResource(getResources(), R.drawable.fraise));
+        createSticker.stickerPreview(heartBtn, BitmapFactory.decodeResource(getResources(), R.drawable.heart));
+        createSticker.stickerPreview(bunnyBtn, BitmapFactory.decodeResource(getResources(), R.drawable.lapin));
+        createSticker.stickerPreview(meliBtn, BitmapFactory.decodeResource(getResources(), R.drawable.meli));
+        createSticker.stickerPreview(appleBtn, BitmapFactory.decodeResource(getResources(), R.drawable.pomme));
+        createSticker.stickerPreview(chickenBtn, BitmapFactory.decodeResource(getResources(), R.drawable.poulet));
+        createSticker.stickerPreview(octopusBtn, BitmapFactory.decodeResource(getResources(), R.drawable.poulpe));
+        createSticker.stickerPreview(sunBtn, BitmapFactory.decodeResource(getResources(), R.drawable.soleil));
+        createSticker.stickerPreview(sweetBtn, BitmapFactory.decodeResource(getResources(), R.drawable.sweet));
+        createSticker.stickerPreview(pieBtn, BitmapFactory.decodeResource(getResources(), R.drawable.tarte));
 
         leafBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -785,12 +838,9 @@ public class MainActivity extends AppCompatActivity {
                 ProcessingBitmap("pie");
             }
         });
-
-
-
     }
 
-    private void ProcessingBitmap(String nameSticker) {
+    public void ProcessingBitmap(String nameSticker) {
         int x = 0, y = 0;
 
         // Make the image mutable
@@ -800,8 +850,9 @@ public class MainActivity extends AppCompatActivity {
         }
         image = image.copy(bitmapConfig, true);
 
+        createSticker = new MakeSticker(this, image, full_image);
         // Make the sticker mutable
-        Bitmap sticker = selectSticker(nameSticker);
+        Bitmap sticker = createSticker.selectSticker(nameSticker);
 
         android.graphics.Bitmap.Config bitmapConfigSticker = sticker.getConfig();
         if(bitmapConfigSticker == null) {
@@ -826,94 +877,36 @@ public class MainActivity extends AppCompatActivity {
         Bitmap fusion = Bitmap.createBitmap(image.getWidth(), image.getHeight(), bitmapConfig);
         Bitmap full_fusion = Bitmap.createBitmap(full_image.getWidth(), full_image.getHeight(), bitmapConfig);
 
+        // Choose a random position for the sticker
+        int img_sticker_x = (int) (Math.random() * (image.getWidth() - sticker.getWidth()));
+        int img_sticker_y = (int)  (Math.random() * (image.getHeight() - sticker.getHeight()));
+
         Canvas canvas = new Canvas();
         canvas.setBitmap(fusion);
         canvas.drawBitmap(image, new Matrix(), null);
-        canvas.drawBitmap(sticker, (int) (Math.random() * (image.getWidth() - sticker.getWidth())), (int)  (Math.random() * (image.getHeight() - sticker.getHeight())), null);
+        canvas.drawBitmap(sticker, img_sticker_x, img_sticker_y, null);
+
+        // Fusion of the full_image with the sticker
+
+        // Resize the sticker for the full_image
+        int full_size_sticker_x = (sticker.getWidth() * full_image.getWidth()) / image.getWidth();
+        int full_size_sticker_y = (sticker.getHeight() * full_image.getHeight()) / image.getHeight();
+
+        // Change the position of the sticker for the full_image
+        int full_image_sticker_x = (img_sticker_x * full_image.getWidth()) / image.getWidth();
+        int full_image_sticker_y = (img_sticker_y * full_image.getHeight()) / image.getHeight();
+
+        sticker = Bitmap.createScaledBitmap(sticker, full_size_sticker_x, full_size_sticker_y, false);
 
         Canvas canvas2 = new Canvas();
         canvas2.setBitmap(full_fusion);
         canvas2.drawBitmap(full_image, new Matrix(), null);
-        canvas2.drawBitmap(sticker, (int) (Math.random() * (full_image.getWidth() - sticker.getWidth())), (int)  (Math.random() * (full_image.getHeight() - sticker.getHeight())), null);
+        canvas2.drawBitmap(sticker, full_image_sticker_x, full_image_sticker_y, null);
 
         image = fusion;
         full_image = full_fusion;
 
-
         updateImage();
-
-    }
-
-    private Bitmap selectSticker(String sticker) {
-        Bitmap stickerBmp = Bitmap.createBitmap(image.getWidth() ,image.getHeight(), android.graphics.Bitmap.Config.ARGB_8888);
-        switch(sticker){
-            case "leaf" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.leaf);
-                break;
-            case "cat1" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.cat1);
-                break;
-            case "cat2" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.cat2);
-                break;
-            case "cat3" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.cat3);
-                break;
-            case "cerise" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.cerise);
-                break;
-            case "clemenceau" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.clemenceau);
-                break;
-            case "cloud" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.cloud);
-                break;
-            case "crown1" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.crown1);
-                break;
-            case "crown2" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.crown2);
-                break;
-            case "donut" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.donut);
-                break;
-            case "egg" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.egg);
-                break;
-            case "fraise" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.fraise);
-                break;
-            case "heart" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.heart);
-                break;
-            case "bunny" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.lapin);
-                break;
-            case "meli" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.meli);
-                break;
-            case "apple" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.pomme);
-                break;
-            case "chicken" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.poulet);
-                break;
-            case "octopus" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.poulpe);
-                break;
-            case "sun" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.soleil);
-                break;
-            case "sweet" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.sweet);
-                break;
-            case "pie" :
-                stickerBmp =  BitmapFactory.decodeResource(this.getResources(), R.drawable.tarte);
-                break;
-            default :
-                break;
-        }
-        return stickerBmp;
     }
 
     private void makeFrames() {
@@ -935,8 +928,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setFrame(String nameFrame) {
-        int x = 0, y = 0;
-
+        
         // Make the image mutable
         android.graphics.Bitmap.Config bitmapConfig = image.getConfig();
         if(bitmapConfig == null) {
