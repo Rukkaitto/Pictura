@@ -269,11 +269,13 @@ public class MainActivity extends AppCompatActivity {
         if(photoFile != null) {
             // Converts the full resolution bitmap to a byte array
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            /*
             if(selectedFilter != null) {
                 selectedFilter.apply(full_image);
             }
+            */
             // JPEG compression
-            full_image.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+            image.compress(Bitmap.CompressFormat.JPEG, 90, bos);
             byte[] bitmapData = bos.toByteArray();
 
             try {
@@ -1153,7 +1155,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == SAVE_IMAGE) {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Bitmap full_image_result = full_image.copy(full_image.getConfig(), true);
+                Bitmap full_image_result = image.copy(image.getConfig(), true);
                 if(selectedFilter != null) {
                     selectedFilter.apply(full_image_result);
                 }
