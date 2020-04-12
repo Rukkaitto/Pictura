@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
         tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                seekBar.setVisibility(View.INVISIBLE);
                 for(final Button otherTab : tabs) {
                     otherTab.setTextColor(Color.parseColor("#C5C5C5"));
                 }
@@ -572,6 +573,7 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private void makeStickers() {
+
         // Filter buttons
         ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
 
