@@ -42,6 +42,7 @@ import com.lucasgoudin.pictura.Filter.Filter;
 import com.lucasgoudin.pictura.Filter.FilterName;
 import com.lucasgoudin.pictura.Filter.FilterRS;
 import com.lucasgoudin.pictura.Filter.FilterPreview;
+import com.lucasgoudin.pictura.Filter.MakeBorder;
 import com.lucasgoudin.pictura.Filter.MakeSticker;
 import com.lucasgoudin.pictura.Filter.DrawingView;
 
@@ -73,10 +74,10 @@ public class MainActivity extends AppCompatActivity {
     TextView noPhotoMessage;
     LinearLayout tabsLayout;
 
-    ArrayList<TextView> stickersBtn;
     MakeSticker createSticker;
+    MakeBorder createBorder;
 
-    LinearLayout filtersTabContent, stickersTabContent, textTabContent, brushesTabContent;
+    LinearLayout filtersTabContent, stickersTabContent, bordersTabContent, textTabContent, brushesTabContent;
     ArrayList<LinearLayout> tabsContent;
 
 
@@ -145,12 +146,14 @@ public class MainActivity extends AppCompatActivity {
         stickersTabContent = new LinearLayout(layoutContext);
         tabsContent.add(stickersTabContent);
 
+        bordersTabContent = new LinearLayout(layoutContext);
+        tabsContent.add(bordersTabContent);
+
         textTabContent = new LinearLayout(layoutContext);
         tabsContent.add(textTabContent);
 
         brushesTabContent = new LinearLayout(layoutContext);
         tabsContent.add(brushesTabContent);
-
 
         scrollView.addView(filtersTabContent);
 
@@ -180,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case TEXT:
                         scrollView.removeAllViews();
-                        scrollView.addView(textTabContent);
+                        scrollView.addView(bordersTabContent);
                         break;
                     case BRUSHES:
                         scrollView.removeAllViews();
@@ -562,14 +565,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Creates the stickers, with their associated buttons
+     */
+
     private void makeStickers() {
         // Filter buttons
         ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
 
-        final TextView leafBtn = new TextView(buttonContext);
+        TextView leafBtn = new TextView(buttonContext);
         leafBtn.setText("Feuille");
 
-        final TextView cat1Btn = new TextView(buttonContext);
+        TextView cat1Btn = new TextView(buttonContext);
         cat1Btn.setText("Chat roux");
 
         TextView cat2Btn = new TextView(buttonContext);
@@ -651,30 +658,9 @@ public class MainActivity extends AppCompatActivity {
         stickersTabContent.addView(sweetBtn);
         stickersTabContent.addView(pieBtn);
 
-        stickersBtn = new ArrayList<>();
-        stickersBtn.add(leafBtn);
-        stickersBtn.add(cat1Btn);
-        stickersBtn.add(cat2Btn);
-        stickersBtn.add(cat3Btn);
-        stickersBtn.add(ceriseBtn);
-        stickersBtn.add(clemenceauBtn);
-        stickersBtn.add(cloudBtn);
-        stickersBtn.add(crown1Btn);
-        stickersBtn.add(crown2Btn);
-        stickersBtn.add(donutBtn);
-        stickersBtn.add(eggBtn);
-        stickersBtn.add(fraiseBtn);
-        stickersBtn.add(heartBtn);
-        stickersBtn.add(bunnyBtn);
-        stickersBtn.add(meliBtn);
-        stickersBtn.add(appleBtn);
-        stickersBtn.add(chickenBtn);
-        stickersBtn.add(octopusBtn);
-        stickersBtn.add(sunBtn);
-        stickersBtn.add(sweetBtn);
-        stickersBtn.add(pieBtn);
-
         createSticker = new MakeSticker(this, image, full_image);
+
+        // Create previews of stickers buttons
 
         createSticker.stickerPreview(leafBtn, BitmapFactory.decodeResource(getResources(), R.drawable.leaf));
         createSticker.stickerPreview(cat1Btn, BitmapFactory.decodeResource(getResources(), R.drawable.cat1));
@@ -846,6 +832,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Apply the sticker to the bitmap
+     * @param nameSticker is the sticker selected
+     */
+
     public void ProcessingBitmap(String nameSticker) {
         createSticker = new MakeSticker(this, image, full_image);
         createSticker.ProcessingBitmap(nameSticker);
@@ -856,6 +847,10 @@ public class MainActivity extends AppCompatActivity {
         updateImage();
     }
 
+    /**
+     * Creates the borders, with their associated buttons
+     */
+
     private void makeBorders() {
         // Filter buttons
         ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
@@ -863,7 +858,37 @@ public class MainActivity extends AppCompatActivity {
         TextView border1Btn = new TextView(buttonContext);
         border1Btn.setText("Cadre n°1");
 
-        textTabContent.addView(border1Btn);
+        TextView border2Btn = new TextView(buttonContext);
+        border2Btn.setText("Cadre n°2");
+
+        TextView border3Btn = new TextView(buttonContext);
+        border3Btn.setText("Cadre n°3");
+
+        TextView border4Btn = new TextView(buttonContext);
+        border4Btn.setText("Cadre n°4");
+
+        TextView border5Btn = new TextView(buttonContext);
+        border5Btn.setText("Cadre n°5");
+
+        TextView border6Btn = new TextView(buttonContext);
+        border6Btn.setText("Cadre n°6");
+
+        bordersTabContent.addView(border1Btn);
+        bordersTabContent.addView(border2Btn);
+        bordersTabContent.addView(border3Btn);
+        bordersTabContent.addView(border4Btn);
+        bordersTabContent.addView(border5Btn);
+        bordersTabContent.addView(border6Btn);
+
+        createBorder = new MakeBorder(this, image, full_image);
+
+        createBorder.stickerPreview(border1Btn, BitmapFactory.decodeResource(getResources(), R.drawable.frame1));
+        createBorder.stickerPreview(border2Btn, BitmapFactory.decodeResource(getResources(), R.drawable.victorian));
+        createBorder.stickerPreview(border3Btn, BitmapFactory.decodeResource(getResources(), R.drawable.wood));
+        createBorder.stickerPreview(border4Btn, BitmapFactory.decodeResource(getResources(), R.drawable.colors));
+        createBorder.stickerPreview(border5Btn, BitmapFactory.decodeResource(getResources(), R.drawable.stone));
+        createBorder.stickerPreview(border6Btn, BitmapFactory.decodeResource(getResources(), R.drawable.water));
+
 
         border1Btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -872,52 +897,57 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        border2Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFrame("border2");
+            }
+        });
+
+        border3Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFrame("border3");
+            }
+        });
+
+        border4Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFrame("border4");
+            }
+        });
+
+        border5Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFrame("border5");
+            }
+        });
+
+        border6Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFrame("border6");
+            }
+        });
     }
 
+    /**
+     * Apply the border to the bitmap
+     * @param nameborder is the border selected
+     */
+
     private void setFrame(String nameborder) {
+        createBorder = new MakeBorder(this, image, full_image);
+        createBorder.ProcessingBitmap(nameborder);
 
-        // Make the image mutable
-        android.graphics.Bitmap.Config bitmapConfig = image.getConfig();
-        if(bitmapConfig == null) {
-            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
-        }
-        image = image.copy(bitmapConfig, true);
-
-        // Make the frame mutable
-        Bitmap frame = selectFrame(nameborder);
-
-        android.graphics.Bitmap.Config bitmapConfigSticker = frame.getConfig();
-        if(bitmapConfigSticker == null) {
-            bitmapConfigSticker = android.graphics.Bitmap.Config.ARGB_8888;
-        }
-        frame = frame.copy(bitmapConfigSticker, true);
-
-        frame = Bitmap.createScaledBitmap(frame,image.getWidth(),image.getHeight(),false);
-
-        // Fusion of the image with the sticker
-        Bitmap fusion = Bitmap.createBitmap(image.getWidth(), image.getHeight(), bitmapConfig);
-
-        Canvas canvas = new Canvas();
-        canvas.setBitmap(fusion);
-        canvas.drawBitmap(image, new Matrix(), null);
-        canvas.drawBitmap(frame, new Matrix(), null);
-        image = fusion;
+        image = MakeBorder.img_fusion;
+        full_image = MakeBorder.img_full_fusion;
 
         updateImage();
     }
 
-    private Bitmap selectFrame(String border){
-        Bitmap borderBmp = Bitmap.createBitmap(image.getWidth() ,image.getHeight(), android.graphics.Bitmap.Config.ARGB_8888);
-        switch(border){
-            case "border1" :
-                borderBmp = BitmapFactory.decodeResource(this.getResources(), R.drawable.frame1);
-                break;
-                //case ""
-            default :
-                break;
-        }
-        return borderBmp;
-    }
 
     private void makeBrushes() {
         ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);

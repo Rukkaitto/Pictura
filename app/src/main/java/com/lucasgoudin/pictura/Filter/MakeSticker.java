@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,10 +13,9 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import com.lucasgoudin.pictura.R;
 import com.lucasgoudin.pictura.Settings;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
+/**
+ * Creation of stickers on the image
+ */
 public class MakeSticker {
     private AppCompatActivity context;
     Bitmap bmp, image, full_image;
@@ -30,6 +28,11 @@ public class MakeSticker {
         this.full_image = full_image;
     }
 
+    /**
+     * Create the preview for all the stickers in the application
+     * @param btn set the preview with to the good button
+     * @param img set the image to the TextView
+     */
     public void stickerPreview(TextView btn, Bitmap img) {
         bmp = scaleBitmap(img);
 
@@ -38,6 +41,11 @@ public class MakeSticker {
         btn.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
     }
 
+    /**
+     * Scales the bitmap to the preview's dimensions
+     * @param image the image to scale
+     * @return the scaled bitmap
+     */
     private Bitmap scaleBitmap(Bitmap image) {
         Bitmap result;
         int dimension, imageWidth, imageHeight;
@@ -59,6 +67,10 @@ public class MakeSticker {
         return Bitmap.createScaledBitmap(result, (int) (Settings.PREVIEW_SIZE * density), (int) (Settings.PREVIEW_SIZE * density), true);
     }
 
+    /**
+     * Set the sticker to the image and to the full_image
+     * @param nameSticker is the sticker to apply
+     */
     public void ProcessingBitmap(String nameSticker){
         int x = 0, y = 0;
 
@@ -124,7 +136,11 @@ public class MakeSticker {
         img_fusion = fusion;
         img_full_fusion = full_fusion;
     }
-
+    /**
+     * Search the sticker to apply
+     * @param sticker is the name of the sticker
+     * @return the sticker bitmap
+     */
     public Bitmap selectSticker(String sticker) {
         Bitmap stickerBmp = Bitmap.createBitmap(image.getWidth() ,image.getHeight(), android.graphics.Bitmap.Config.ARGB_8888);
         switch(sticker){
