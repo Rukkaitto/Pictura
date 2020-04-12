@@ -22,6 +22,8 @@ public class MakeSticker {
     private AppCompatActivity context;
     Bitmap bmp, image, full_image;
 
+    public static Bitmap img_fusion, img_full_fusion;
+
     public MakeSticker(AppCompatActivity context, Bitmap image, Bitmap full_image) {
         this.context = context;
         this.image = image;
@@ -55,6 +57,72 @@ public class MakeSticker {
 
         float density = context.getResources().getDisplayMetrics().density;
         return Bitmap.createScaledBitmap(result, (int) (Settings.PREVIEW_SIZE * density), (int) (Settings.PREVIEW_SIZE * density), true);
+    }
+
+    public void ProcessingBitmap(String nameSticker){
+        int x = 0, y = 0;
+
+        // Make the image mutable
+        android.graphics.Bitmap.Config bitmapConfig = image.getConfig();
+        if(bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        image = image.copy(bitmapConfig, true);
+
+        // Make the sticker mutable
+        Bitmap sticker = selectSticker(nameSticker);
+
+        android.graphics.Bitmap.Config bitmapConfigSticker = sticker.getConfig();
+        if(bitmapConfigSticker == null) {
+            bitmapConfigSticker = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        sticker = sticker.copy(bitmapConfigSticker, true);
+
+        // Random size of the sticker
+        if(sticker.getWidth() < sticker.getHeight()){
+            int tmp = sticker.getHeight();
+            y = ((int) (Math.random() * (sticker.getHeight() / 2)));
+            x = ((sticker.getWidth() * y) / tmp);
+        } else if(sticker.getWidth() > sticker.getHeight()){
+            int tmp = sticker.getWidth();
+            x = (int) (Math.random() * (sticker.getWidth() / 2));
+            y = ((x * sticker.getHeight()) / tmp);
+        }
+
+        sticker = Bitmap.createScaledBitmap(sticker,x,y,false);
+
+        // Fusion of the image with the sticker
+        Bitmap fusion = Bitmap.createBitmap(image.getWidth(), image.getHeight(), bitmapConfig);
+        Bitmap full_fusion = Bitmap.createBitmap(full_image.getWidth(), full_image.getHeight(), bitmapConfig);
+
+        // Choose a random position for the sticker
+        int img_sticker_x = (int) (Math.random() * (image.getWidth() - sticker.getWidth()));
+        int img_sticker_y = (int)  (Math.random() * (image.getHeight() - sticker.getHeight()));
+
+        Canvas canvas = new Canvas();
+        canvas.setBitmap(fusion);
+        canvas.drawBitmap(image, new Matrix(), null);
+        canvas.drawBitmap(sticker, img_sticker_x, img_sticker_y, null);
+
+        // Fusion of the full_image with the sticker
+
+        // Resize the sticker for the full_image
+        int full_size_sticker_x = (sticker.getWidth() * full_image.getWidth()) / image.getWidth();
+        int full_size_sticker_y = (sticker.getHeight() * full_image.getHeight()) / image.getHeight();
+
+        // Change the position of the sticker for the full_image
+        int full_image_sticker_x = (img_sticker_x * full_image.getWidth()) / image.getWidth();
+        int full_image_sticker_y = (img_sticker_y * full_image.getHeight()) / image.getHeight();
+
+        sticker = Bitmap.createScaledBitmap(sticker, full_size_sticker_x, full_size_sticker_y, false);
+
+        Canvas canvas2 = new Canvas();
+        canvas2.setBitmap(full_fusion);
+        canvas2.drawBitmap(full_image, new Matrix(), null);
+        canvas2.drawBitmap(sticker, full_image_sticker_x, full_image_sticker_y, null);
+
+        img_fusion = fusion;
+        img_full_fusion = full_fusion;
     }
 
     public Bitmap selectSticker(String sticker) {

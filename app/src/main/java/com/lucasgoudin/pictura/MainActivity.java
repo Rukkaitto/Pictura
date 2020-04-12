@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         initializeTabs();
         makeFilters();
         makeStickers();
-        makeFrames();
+        makeBorders();
         makeBrushes();
         updatePreviews();
 
@@ -841,94 +841,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ProcessingBitmap(String nameSticker) {
-        int x = 0, y = 0;
-
-        // Make the image mutable
-        android.graphics.Bitmap.Config bitmapConfig = image.getConfig();
-        if(bitmapConfig == null) {
-            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
-        }
-        image = image.copy(bitmapConfig, true);
-
         createSticker = new MakeSticker(this, image, full_image);
-        // Make the sticker mutable
-        Bitmap sticker = createSticker.selectSticker(nameSticker);
+        createSticker.ProcessingBitmap(nameSticker);
 
-        android.graphics.Bitmap.Config bitmapConfigSticker = sticker.getConfig();
-        if(bitmapConfigSticker == null) {
-            bitmapConfigSticker = android.graphics.Bitmap.Config.ARGB_8888;
-        }
-        sticker = sticker.copy(bitmapConfigSticker, true);
-
-        // Random size of the sticker
-        if(sticker.getWidth() < sticker.getHeight()){
-            int tmp = sticker.getHeight();
-            y = ((int) (Math.random() * (sticker.getHeight())));
-            x = ((sticker.getWidth() * y) / tmp);
-        } else if(sticker.getWidth() > sticker.getHeight()){
-            int tmp = sticker.getWidth();
-            x = (int) (Math.random() * (sticker.getWidth()));
-            y = ((x * sticker.getHeight()) / tmp);
-        }
-
-        sticker = Bitmap.createScaledBitmap(sticker,x,y,false);
-
-        // Fusion of the image with the sticker
-        Bitmap fusion = Bitmap.createBitmap(image.getWidth(), image.getHeight(), bitmapConfig);
-        Bitmap full_fusion = Bitmap.createBitmap(full_image.getWidth(), full_image.getHeight(), bitmapConfig);
-
-        // Choose a random position for the sticker
-        int img_sticker_x = (int) (Math.random() * (image.getWidth() - sticker.getWidth()));
-        int img_sticker_y = (int)  (Math.random() * (image.getHeight() - sticker.getHeight()));
-
-        Canvas canvas = new Canvas();
-        canvas.setBitmap(fusion);
-        canvas.drawBitmap(image, new Matrix(), null);
-        canvas.drawBitmap(sticker, img_sticker_x, img_sticker_y, null);
-
-        // Fusion of the full_image with the sticker
-
-        // Resize the sticker for the full_image
-        int full_size_sticker_x = (sticker.getWidth() * full_image.getWidth()) / image.getWidth();
-        int full_size_sticker_y = (sticker.getHeight() * full_image.getHeight()) / image.getHeight();
-
-        // Change the position of the sticker for the full_image
-        int full_image_sticker_x = (img_sticker_x * full_image.getWidth()) / image.getWidth();
-        int full_image_sticker_y = (img_sticker_y * full_image.getHeight()) / image.getHeight();
-
-        sticker = Bitmap.createScaledBitmap(sticker, full_size_sticker_x, full_size_sticker_y, false);
-
-        Canvas canvas2 = new Canvas();
-        canvas2.setBitmap(full_fusion);
-        canvas2.drawBitmap(full_image, new Matrix(), null);
-        canvas2.drawBitmap(sticker, full_image_sticker_x, full_image_sticker_y, null);
-
-        image = fusion;
-        full_image = full_fusion;
+        image = MakeSticker.img_fusion;
+        full_image = MakeSticker.img_full_fusion;
 
         updateImage();
     }
 
-    private void makeFrames() {
+    private void makeBorders() {
         // Filter buttons
         ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
 
-        TextView frame1Btn = new TextView(buttonContext);
-        frame1Btn.setText("Cadre n°1");
+        TextView border1Btn = new TextView(buttonContext);
+        border1Btn.setText("Cadre n°1");
 
-        textTabContent.addView(frame1Btn);
+        textTabContent.addView(border1Btn);
 
-        frame1Btn.setOnClickListener(new View.OnClickListener() {
+        border1Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setFrame("frame1");
+                setFrame("border1");
             }
         });
 
     }
 
-    private void setFrame(String nameFrame) {
-        
+    private void setFrame(String nameborder) {
+
         // Make the image mutable
         android.graphics.Bitmap.Config bitmapConfig = image.getConfig();
         if(bitmapConfig == null) {
@@ -937,7 +878,7 @@ public class MainActivity extends AppCompatActivity {
         image = image.copy(bitmapConfig, true);
 
         // Make the frame mutable
-        Bitmap frame = selectFrame(nameFrame);
+        Bitmap frame = selectFrame(nameborder);
 
         android.graphics.Bitmap.Config bitmapConfigSticker = frame.getConfig();
         if(bitmapConfigSticker == null) {
@@ -959,16 +900,17 @@ public class MainActivity extends AppCompatActivity {
         updateImage();
     }
 
-    private Bitmap selectFrame(String frame){
-        Bitmap frameBmp = Bitmap.createBitmap(image.getWidth() ,image.getHeight(), android.graphics.Bitmap.Config.ARGB_8888);
-        switch(frame){
-            case "frame1" :
-                frameBmp = BitmapFactory.decodeResource(this.getResources(), R.drawable.frame1);
+    private Bitmap selectFrame(String border){
+        Bitmap borderBmp = Bitmap.createBitmap(image.getWidth() ,image.getHeight(), android.graphics.Bitmap.Config.ARGB_8888);
+        switch(border){
+            case "border1" :
+                borderBmp = BitmapFactory.decodeResource(this.getResources(), R.drawable.frame1);
                 break;
+                case ""
             default :
                 break;
         }
-        return frameBmp;
+        return borderBmp;
     }
 
     private void makeBrushes() {
