@@ -63,7 +63,7 @@ import java.util.Locale;
  */
 public class MainActivity extends AppCompatActivity {
 
-    Bitmap image, base_image, full_image;
+    Bitmap image, base_image, full_image, start_image;
     ImageButton saveBtn, shareBtn, loadBtn, cameraBtn, resetBtn;
     PhotoView photoView;
     HorizontalScrollView scrollView;
@@ -417,7 +417,8 @@ public class MainActivity extends AppCompatActivity {
                 // The value of the seekbar, which is between 0 and 100, is mapped to the minimum and the maximum values of the selected filter
                 float value = map((float) progress, 0f, seekBar.getMax(),selectedFilter.getSeekBarMin(), selectedFilter.getSeekBarMax());
                 selectedFilter.setSeekBarValue(value);
-                resetImage();
+                image = start_image.copy(start_image.getConfig(), true);
+                updateImage();
                 selectedFilter.apply(image);
             }
 
@@ -546,7 +547,8 @@ public class MainActivity extends AppCompatActivity {
                     for(Filter f1 : filters) {
                         f1.getFilterBtn().setTextColor(Color.parseColor("#C5C5C5"));
                     }
-                    resetImage();
+                    start_image = image.copy(image.getConfig(), true);
+                    updateImage();
                     selectedFilter = filter;
                     // If the filter has a seekbar, make it visible and reset it, otherwise hide it
                     if(filter.hasSeekbar()) {
