@@ -43,6 +43,7 @@ import com.lucasgoudin.pictura.Filter.FilterName;
 import com.lucasgoudin.pictura.Filter.FilterRS;
 import com.lucasgoudin.pictura.Filter.FilterPreview;
 import com.lucasgoudin.pictura.Filter.MakeSticker;
+import com.lucasgoudin.pictura.Filter.DrawingView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -78,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout filtersTabContent, stickersTabContent, textTabContent, brushesTabContent;
     ArrayList<LinearLayout> tabsContent;
 
+
+    DrawingView drawingView;
+
     enum tabId {
         FILTERS, STICKERS, TEXT, BRUSHES
     }
@@ -103,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         noPhotoMessage = findViewById(R.id.noPhotoMessage);
         scrollView.setVisibility(View.INVISIBLE);
         photoView.setVisibility(View.INVISIBLE);
+
+
 
         initializeTabs();
         makeFilters();
@@ -914,7 +920,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void makeBrushes() {
-        // TODO : makeBrushes
+        ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
+        TextView brush1Btn = new TextView(buttonContext);
+        brush1Btn.setText("paint");
+        brushesTabContent.addView(brush1Btn);
+        brush1Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawingView = findViewById(R.id.drawingView);
+                drawingView.image = image;
+                ContextThemeWrapper buttonContext2 = new ContextThemeWrapper(MainActivity.this, R.style.filterButtonStyle);
+                TextView saveBtn = new TextView(buttonContext2);
+                saveBtn.setText("save");
+                brushesTabContent.addView(saveBtn);
+                saveBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        drawingView.save();
+                    }
+                });
+            }
+        });
     }
 
     /**
