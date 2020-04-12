@@ -912,7 +912,7 @@ public class MainActivity extends AppCompatActivity {
             case "border1" :
                 borderBmp = BitmapFactory.decodeResource(this.getResources(), R.drawable.frame1);
                 break;
-                case ""
+                //case ""
             default :
                 break;
         }
