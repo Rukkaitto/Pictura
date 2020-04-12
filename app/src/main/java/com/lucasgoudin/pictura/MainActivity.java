@@ -17,6 +17,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.mtp.MtpConstants;
@@ -28,6 +30,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextWatcher;
 import android.view.ContextThemeWrapper;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -70,9 +73,11 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Filter> filters;
     Filter selectedFilter;
     SeekBar seekBar;
+    SeekBar seekBarPaint;
     String currentPhotoPath;
     TextView noPhotoMessage;
-    LinearLayout tabsLayout;
+    LinearLayout tabsLayout, topButtons;
+
 
     MakeSticker createSticker;
     MakeBorder createBorder;
@@ -82,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     DrawingView drawingView;
+    TextView brushBtn, savePBtn, clearBtn, colorBtn;
 
     enum tabId {
         FILTERS, STICKERS, TEXT, BRUSHES
@@ -102,13 +108,15 @@ public class MainActivity extends AppCompatActivity {
         initializeButtons();
         initializeSeekBar();
 
+        topButtons = findViewById(R.id.buttons);
         scrollView = findViewById(R.id.filters);
         tabsLayout = findViewById(R.id.tabs);
         tabsLayout.setVisibility(View.INVISIBLE);
         noPhotoMessage = findViewById(R.id.noPhotoMessage);
         scrollView.setVisibility(View.INVISIBLE);
         photoView.setVisibility(View.INVISIBLE);
-
+        drawingView = findViewById(R.id.drawingView);
+        drawingView.setVisibility(View.GONE);
 
 
         initializeTabs();
@@ -954,29 +962,127 @@ public class MainActivity extends AppCompatActivity {
         updateImage();
     }
 
-
+    /**
+     *  Creates all the buttons and launch the DrawingView
+     */
     private void makeBrushes() {
+        seekBarPaint =  findViewById(R.id.seekBarPaint);
         ContextThemeWrapper buttonContext = new ContextThemeWrapper(this, R.style.filterButtonStyle);
-        TextView brush1Btn = new TextView(buttonContext);
-        brush1Btn.setText("paint");
-        brushesTabContent.addView(brush1Btn);
-        brush1Btn.setOnClickListener(new View.OnClickListener() {
+        brushBtn = new TextView(buttonContext);
+        brushBtn.setText("Peindre");
+        brushesTabContent.addView(brushBtn);
+
+        //add save button
+        savePBtn = new TextView(buttonContext);
+        savePBtn.setText("Valider");
+        brushesTabContent.addView(savePBtn);
+        savePBtn.setVisibility(View.GONE);
+
+        //add clear button
+        clearBtn = new TextView(buttonContext);
+        clearBtn.setText("Annuler");
+        brushesTabContent.addView(clearBtn);
+        clearBtn.setVisibility(View.GONE);
+
+        //add color button
+        colorBtn = new TextView(buttonContext);
+        colorBtn.setText("Couleur");
+        brushesTabContent.addView(colorBtn);
+        colorBtn.setVisibility(View.GONE);
+
+        drawingView.setVisibility(View.INVISIBLE);
+
+        //creates all the preview for the buttons
+        drawingView.addContext(this);
+        drawingView.drawingPreview(brushBtn,BitmapFactory.decodeResource(getResources() ,R.drawable.brush));
+        drawingView.drawingPreview(savePBtn,BitmapFactory.decodeResource(getResources() ,R.drawable.validate));
+        drawingView.drawingPreview(clearBtn,BitmapFactory.decodeResource(getResources() ,R.drawable.undo));
+        drawingView.drawingPreview(colorBtn,BitmapFactory.decodeResource(getResources() ,R.drawable.palette));
+
+        brushBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawingView = findViewById(R.id.drawingView);
-                drawingView.image = image;
-                ContextThemeWrapper buttonContext2 = new ContextThemeWrapper(MainActivity.this, R.style.filterButtonStyle);
-                TextView saveBtn = new TextView(buttonContext2);
-                saveBtn.setText("save");
-                brushesTabContent.addView(saveBtn);
-                saveBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        drawingView.save();
+            //init drawingView
+            drawingView.initBitmap(resizeBitmapPaint(image));
+            openPainting();
+
+            savePBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                drawingView.save();
+
+                image = DrawingView.full_image;
+                full_image = DrawingView.full_image;
+                updateImage();
+
+                closePainting();
+                }
+            });
+            clearBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                drawingView.clear();
+                closePainting();
+                }
+            });
+                colorBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(seekBarPaint.getVisibility() == View.VISIBLE){
+                        seekBarPaint.setVisibility(View.GONE);
+                    }else{
+                        seekBarPaint.setVisibility(View.VISIBLE);
+                        seekBarPaint.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                drawingView.modifColor(progress*3.6f);
+                                int[] rgb = drawingView.rgb360(progress*3.6f);
+                                //modify the color of the seekBar
+                                seekBar.getProgressDrawable().setColorFilter(Color.rgb(rgb[0],rgb[1],rgb[2]), PorterDuff.Mode.SRC_IN);
+                            }
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                            }
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                            }
+                        });
                     }
-                });
+                }
+            });
             }
         });
+    }
+
+    /**
+     * Hide some parts of the IU and reveals some others parts
+     * when you start to draw
+     */
+    private void openPainting(){
+        drawingView.setVisibility(View.VISIBLE);
+        colorBtn.setVisibility(View.VISIBLE);
+        savePBtn.setVisibility(View.VISIBLE);
+        clearBtn.setVisibility(View.VISIBLE);
+        brushBtn.setVisibility(View.GONE);
+        photoView.setVisibility(View.GONE);
+        tabsLayout.setVisibility(View.GONE);
+        topButtons.setVisibility(View.GONE);
+    }
+
+    /**
+     Hide some parts of the IU and reveals some others parts
+     * when you stop to draw
+     */
+    private void closePainting(){
+        seekBarPaint.setVisibility(View.GONE);
+        topButtons.setVisibility(View.VISIBLE);
+        tabsLayout.setVisibility(View.VISIBLE);
+        brushBtn.setVisibility(View.VISIBLE);
+        photoView.setVisibility(View.VISIBLE);
+        colorBtn.setVisibility(View.GONE);
+        clearBtn.setVisibility(View.GONE);
+        savePBtn.setVisibility(View.GONE);
+        drawingView.setVisibility(View.GONE);
     }
 
     /**
@@ -1052,6 +1158,21 @@ public class MainActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(bmp, (int)(photoW / scaleFactor), (int)(photoH / scaleFactor), true);
     }
 
+    /**
+     * ReScales the bitmap to fit with the size of the screen
+     * @param bmp
+     * @return the reScales Bitmap
+     */
+    private Bitmap resizeBitmapPaint(Bitmap bmp){
+        // Gets the dimensions of the screen
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = (int) ((size.x));
+        int height = size.y;
+
+        return Bitmap.createScaledBitmap(bmp, width, (bmp.getHeight()* width)/bmp.getWidth(), true);
+    }
     /**
      * Processes the picture, taken either from the gallery or the camera and sets it on the PhotoView
      * @param imageUri the Uri of the picture
