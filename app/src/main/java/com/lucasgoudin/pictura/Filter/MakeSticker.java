@@ -108,8 +108,8 @@ public class MakeSticker {
         Bitmap full_fusion = Bitmap.createBitmap(full_image.getWidth(), full_image.getHeight(), bitmapConfig);
 
         // Choose a random position for the sticker
-        int img_sticker_x = (int) (Math.random() * (image.getWidth() - sticker.getWidth()));
-        int img_sticker_y = (int)  (Math.random() * (image.getHeight() - sticker.getHeight()));
+        int img_sticker_x = 1 + (int) (Math.random() * (image.getWidth() - sticker.getWidth() - 1));
+        int img_sticker_y = 1 + (int)  (Math.random() * (image.getHeight() - sticker.getHeight() - 1));
 
         Canvas canvas = new Canvas();
         canvas.setBitmap(fusion);
